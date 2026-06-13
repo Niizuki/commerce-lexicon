@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "temp.commerce.productGroup",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["title", "shopRef", "optionAxes", "createdAt"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "shopRef": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the parent shop record"
+          },
+          "optionAxes": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "temp.commerce.defs#optionAxis"
+            },
+            "minLength": 1,
+            "maxLength": 10,
+            "description": "Variant axes declared on this group (e.g. Color, Size)"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "blob",
+              "accept": ["image/*"],
+              "maxSize": 1000000
+            },
+            "maxLength": 10
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

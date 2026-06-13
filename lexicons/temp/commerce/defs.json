@@ -1,0 +1,85 @@
+{
+  "lexicon": 1,
+  "id": "temp.commerce.defs",
+  "defs": {
+    "price": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "description": "Price in minor currency units (e.g. cents). Zero indicates free."
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "ISO 4217 currency code"
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "ISO 3166-1 alpha-2 country code"
+        },
+        "region": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "State, province, or administrative region"
+        },
+        "locality": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "City or town"
+        },
+        "postalPrefix": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Postal/ZIP code prefix for approximate location"
+        },
+        "isRemote": {
+          "type": "boolean",
+          "description": "True if this is a remote/online-only operation with no physical location"
+        }
+      }
+    },
+    "variantProperty": {
+      "type": "object",
+      "required": ["axis", "value"],
+      "properties": {
+        "axis": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Option axis name (e.g. Color, Size)"
+        },
+        "value": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Selected value for this axis"
+        }
+      }
+    },
+    "optionAxis": {
+      "type": "object",
+      "required": ["name", "values"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Axis name (e.g. Color, Size)"
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 200 },
+          "maxLength": 100,
+          "description": "Available values for this axis"
+        }
+      }
+    }
+  }
+}

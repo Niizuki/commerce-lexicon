@@ -1,0 +1,51 @@
+{
+  "lexicon": 1,
+  "id": "temp.commerce.review",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "rating", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the productGroup or standalone listing being reviewed (durable, product-level anchor)"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "variantSnapshot": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "temp.commerce.defs#variantProperty"
+            },
+            "maxLength": 10,
+            "description": "Denormalized variant properties captured at review time (e.g. [{axis: Color, value: Red}])"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Placeholder for future verified-purchase token"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

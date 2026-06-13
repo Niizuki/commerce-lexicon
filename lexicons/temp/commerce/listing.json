@@ -1,0 +1,172 @@
+{
+  "lexicon": 1,
+  "id": "temp.commerce.listing",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["type", "title", "price", "category", "shopRef", "createdAt"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "knownValues": ["goods", "service", "digital"],
+            "description": "Listing type discriminator"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "price": {
+            "type": "ref",
+            "ref": "temp.commerce.defs#price"
+          },
+          "availability": {
+            "type": "string",
+            "knownValues": ["in_stock", "out_of_stock", "pre_order", "discontinued"],
+            "description": "Availability status; can be computed from quantity or set independently"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Available inventory count, if known"
+          },
+          "condition": {
+            "type": "string",
+            "knownValues": ["new", "openBox", "likeNew", "good", "fair", "forParts", "notApplicable"],
+            "description": "Item condition"
+          },
+          "category": {
+            "type": "string",
+            "knownValues": [
+              "antiques", "apparel", "auto", "baby", "books", "business",
+              "cameras", "cell_phones", "collectibles", "computers", "digital_arts",
+              "electronics", "entertainment", "furniture", "garden", "health",
+              "hobbies", "home_goods", "home_improvement", "kids", "musical",
+              "office", "pets", "sporting", "video_games", "other"
+            ],
+            "description": "Top-level category slug"
+          },
+          "subcategory": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Free-text subcategory; vocabulary maintained outside the Lexicon"
+          },
+          "sku": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Seller-defined SKU for this variant"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "blob",
+              "accept": ["image/*"],
+              "maxSize": 1000000
+            },
+            "maxLength": 10
+          },
+          "shopRef": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the parent shop record"
+          },
+          "partOf": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the parent productGroup, if this listing is a variant"
+          },
+          "variantProperties": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "temp.commerce.defs#variantProperty"
+            },
+            "maxLength": 10,
+            "description": "Concrete variant property tuple (e.g. [{axis: Color, value: Red}, {axis: Size, value: M}])"
+          },
+          "details": {
+            "type": "union",
+            "refs": ["#goodsDetails", "#serviceDetails", "#digitalDetails"],
+            "description": "Type-specific fields matching the type discriminator"
+          },
+          "externalUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "External URL for purchasing (e.g. Amazon, eBay link)"
+          },
+          "checkoutUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "Direct checkout URL if supported by seller platform"
+          },
+          "hideFromFriends": {
+            "type": "boolean",
+            "description": "Social privacy: hide this listing from friends/followers"
+          },
+          "labels": {
+            "type": "union",
+            "refs": ["com.atproto.label.defs#selfLabels"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    },
+    "goodsDetails": {
+      "type": "object",
+      "description": "Type-specific fields for physical goods",
+      "properties": {
+        "shippingWeight": {
+          "type": "integer",
+          "description": "Weight in grams"
+        }
+      }
+    },
+    "serviceDetails": {
+      "type": "object",
+      "description": "Type-specific fields for services and commissions",
+      "properties": {
+        "slotsAvailable": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of service slots currently available"
+        },
+        "turnaroundTime": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Expected turnaround or delivery time"
+        }
+      }
+    },
+    "digitalDetails": {
+      "type": "object",
+      "description": "Type-specific fields for digital goods",
+      "properties": {
+        "fileFormat": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "File format or type (e.g. PDF, PNG, ZIP)"
+        },
+        "deliveryMethod": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "How the digital good is delivered"
+        }
+      }
+    }
+  }
+}
