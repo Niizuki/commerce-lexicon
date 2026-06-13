@@ -12,7 +12,7 @@ Namespace is `app.temp.commerce.*` during development, intended to migrate to `l
 | **productGroup** | `tid` | Optional grouping for variant products — declares option axes and is the source of truth for `category` and `type` |
 | **listing** | `tid` | Polymorphic product/service/digital listing with structured pricing and inventory |
 | **review** | `tid` | Product-level review with a denormalized variant snapshot |
-| **defs** | — | Shared types: `price`, `location`, `variantProperty`, `optionAxis` |
+| **defs** | — | Shared types: `price`, `location`, `variantProperty`, `optionAxis`, `categorySlug` |
 
 ## Key design decisions
 
@@ -22,7 +22,7 @@ Namespace is `app.temp.commerce.*` during development, intended to migrate to `l
 - **Location** is internationalized: `{countryCode, region, locality, postalPrefix, isRemote}` replacing the US-centric model.
 - **Polymorphism** via a `type` discriminator (`goods | service | digital`) with type-specific detail unions.
 - **Reviews anchor to the product group** (durable), carrying a `variantSnapshot` of the variant properties at review time. The snapshot is self-contained — not anchored to any live variant listing. If variants are restructured, reviews stay valid and filterable.
-- **Categories** use `knownValues` (an open/advisory set in atproto). Records with unknown slugs are protocol-valid; apps maintain canonical registries. This means adding a category is not a breaking Lexicon change.
+- **Categories** use a curated 21-slug vocabulary defined once in `defs#categorySlug` and referenced by both `listing` and `productGroup` (single source of truth). It is an open/advisory `knownValues` set — records with unknown slugs stay protocol-valid and apps maintain canonical registries, so adding a category is not a breaking Lexicon change. The vocabulary is an editorial pass on Open Market's original list: `antiques` merged into `collectibles`; `cameras`, `cell_phones`, `computers` collapsed into `electronics`; `digital_arts` dropped (format is expressed by `type`, content by the category); `Free Stuff` removed (a price state, `amount: 0`, not a category).
 - **Transactions, payments, and fulfillment** are explicitly out of scope — bridged via `externalUrl` / `checkoutUrl`.
 
 ## App-level invariants

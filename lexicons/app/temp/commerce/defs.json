@@ -64,6 +64,16 @@
         }
       }
     },
+    "categorySlug": {
+      "type": "string",
+      "knownValues": [
+        "apparel", "auto", "baby", "books", "business", "collectibles",
+        "electronics", "entertainment", "furniture", "garden", "health",
+        "hobbies", "home_goods", "home_improvement", "kids", "musical",
+        "office", "pets", "sporting", "video_games", "other"
+      ],
+      "description": "Top-level category slug. Open/advisory knownValues — apps maintain canonical registries. Single source of truth for listing and productGroup."
+    },
     "optionAxis": {
       "type": "object",
       "required": ["name", "values"],

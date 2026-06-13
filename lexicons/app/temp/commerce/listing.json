@@ -41,15 +41,8 @@
             "knownValues": ["new", "openBox", "likeNew", "good", "fair", "forParts", "notApplicable"]
           },
           "category": {
-            "type": "string",
-            "knownValues": [
-              "antiques", "apparel", "auto", "baby", "books", "business",
-              "cameras", "cell_phones", "collectibles", "computers", "digital_arts",
-              "electronics", "entertainment", "furniture", "garden", "health",
-              "hobbies", "home_goods", "home_improvement", "kids", "musical",
-              "office", "pets", "sporting", "video_games", "other"
-            ],
-            "description": "Top-level category slug"
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#categorySlug"
           },
           "subcategory": {
             "type": "string",
