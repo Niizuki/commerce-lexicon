@@ -1,13 +1,13 @@
 {
   "lexicon": 1,
-  "id": "temp.commerce.productGroup",
+  "id": "app.temp.commerce.productGroup",
   "defs": {
     "main": {
       "type": "record",
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["title", "shopRef", "optionAxes", "createdAt"],
+        "required": ["title", "shopRef", "optionAxes", "category", "type", "createdAt"],
         "properties": {
           "title": {
             "type": "string",
@@ -26,11 +26,27 @@
             "type": "array",
             "items": {
               "type": "ref",
-              "ref": "temp.commerce.defs#optionAxis"
+              "ref": "app.temp.commerce.defs#optionAxis"
             },
             "minLength": 1,
             "maxLength": 10,
             "description": "Variant axes declared on this group (e.g. Color, Size)"
+          },
+          "category": {
+            "type": "string",
+            "knownValues": [
+              "antiques", "apparel", "auto", "baby", "books", "business",
+              "cameras", "cell_phones", "collectibles", "computers", "digital_arts",
+              "electronics", "entertainment", "furniture", "garden", "health",
+              "hobbies", "home_goods", "home_improvement", "kids", "musical",
+              "office", "pets", "sporting", "video_games", "other"
+            ],
+            "description": "Top-level category slug. Source of truth for all variant listings in this group."
+          },
+          "type": {
+            "type": "string",
+            "knownValues": ["goods", "service", "digital"],
+            "description": "Listing type for all variants in this group. Source of truth; variant listings mirror this value."
           },
           "images": {
             "type": "array",

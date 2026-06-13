@@ -1,0 +1,6 @@
+{ "$type": "app.temp.commerce.listing", "type": "goods", "title": "Classic Tee — Red / M",
+  "price": { "amount": 2500, "currency": "USD" }, "category": "apparel",
+  "shopRef": "at://did:plc:abc/app.temp.commerce.shop/self",
+  "partOf": "at://did:plc:abc/app.temp.commerce.productGroup/xyz",
+  "variantProperties": [ {"axis":"Color","value":"Red"}, {"axis":"Size","value":"M"} ],
+  "sku": "TEE-RED-M", "quantity": 4, "createdAt": "2026-06-13T10:00:00Z" }

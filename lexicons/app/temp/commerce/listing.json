@@ -1,6 +1,6 @@
 {
   "lexicon": 1,
-  "id": "temp.commerce.listing",
+  "id": "app.temp.commerce.listing",
   "defs": {
     "main": {
       "type": "record",
@@ -24,7 +24,7 @@
           },
           "price": {
             "type": "ref",
-            "ref": "temp.commerce.defs#price"
+            "ref": "app.temp.commerce.defs#price"
           },
           "availability": {
             "type": "string",
@@ -38,8 +38,7 @@
           },
           "condition": {
             "type": "string",
-            "knownValues": ["new", "openBox", "likeNew", "good", "fair", "forParts", "notApplicable"],
-            "description": "Item condition"
+            "knownValues": ["new", "openBox", "likeNew", "good", "fair", "forParts", "notApplicable"]
           },
           "category": {
             "type": "string",
@@ -85,7 +84,7 @@
             "type": "array",
             "items": {
               "type": "ref",
-              "ref": "temp.commerce.defs#variantProperty"
+              "ref": "app.temp.commerce.defs#variantProperty"
             },
             "maxLength": 10,
             "description": "Concrete variant property tuple (e.g. [{axis: Color, value: Red}, {axis: Size, value: M}])"

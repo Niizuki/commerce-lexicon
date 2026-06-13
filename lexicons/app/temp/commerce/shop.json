@@ -1,10 +1,10 @@
 {
   "lexicon": 1,
-  "id": "temp.commerce.shop",
+  "id": "app.temp.commerce.shop",
   "defs": {
     "main": {
       "type": "record",
-      "key": "tid",
+      "key": "self",
       "record": {
         "type": "object",
         "required": ["name", "createdAt"],
@@ -29,7 +29,7 @@
           },
           "location": {
             "type": "ref",
-            "ref": "temp.commerce.defs#location"
+            "ref": "app.temp.commerce.defs#location"
           },
           "createdAt": {
             "type": "string",

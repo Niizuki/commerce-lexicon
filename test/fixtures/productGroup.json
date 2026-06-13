@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.productGroup", "title": "Classic Tee",
+  "shopRef": "at://did:plc:abc/app.temp.commerce.shop/self",
+  "optionAxes": [ {"name":"Color","values":["Red","Blue"]}, {"name":"Size","values":["S","M","L"]} ],
+  "category": "apparel", "type": "goods", "createdAt": "2026-06-13T10:00:00Z" }
