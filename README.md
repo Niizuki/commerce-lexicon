@@ -74,6 +74,7 @@ Fixtures are addressed by `test/fixtures/manifest.json` and converted with `json
 
 - [docs/boundaries.md](docs/boundaries.md) — why each boundary exists, what was deliberately deferred, and the full reasoning behind the variant inheritance decision.
 - [docs/validation.md](docs/validation.md) — what the validator checks, why each phase exists, and how to add fixtures and invariants.
+- [docs/next-implementation.md](docs/next-implementation.md) — the next round of work: thirteen gaps from auadix's field-level review, with two new sub-schemas, the fields that stay inline and why, and one decision to settle first.
 - `Instructions.txt` — the architectural brief this implementation follows.
 - `docs/internal/` — local working notes (including the original synthesis brief). Untracked by design.
 
