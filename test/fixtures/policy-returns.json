@@ -1,0 +1,7 @@
+{ "$type": "app.temp.commerce.policy",
+  "subject": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "kind": "returns", "title": "30-day returns",
+  "content": "Unworn items may be returned within 30 days of delivery for a full refund.",
+  "url": "https://acme.example/returns",
+  "effectiveFrom": "2026-01-01T00:00:00Z",
+  "createdAt": "2025-12-20T09:00:00Z" }

@@ -4,6 +4,7 @@
   "defs": {
     "main": {
       "type": "record",
+      "description": "A buyer-owned review, living in the reviewer's repo so authorship is preserved and the review is portable across applications. It carries no self-asserted verification: whether a purchase actually happened is a claim for a separate attestation record issued by someone other than the review author, and each application decides which issuers it trusts.",
       "key": "tid",
       "record": {
         "type": "object",
@@ -35,10 +36,6 @@
             },
             "maxLength": 10,
             "description": "Denormalized variant properties captured at review time (e.g. [{axis: Color, value: Red}])"
-          },
-          "verified": {
-            "type": "boolean",
-            "description": "Placeholder for future verified-purchase token"
           },
           "createdAt": {
             "type": "string",

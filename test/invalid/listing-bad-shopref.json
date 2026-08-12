@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "physical", "title": "Broken shopRef",
+  "price": { "amount": 1800, "currency": "USD" }, "category": "home_goods",
+  "shopRef": "https://acme.example/shop",
+  "createdAt": "2026-06-13T10:00:00Z" }

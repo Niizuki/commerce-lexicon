@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "physical",
+  "title": "Vintage synthesiser", "category": "vintage_synths",
+  "price": { "amount": 120000, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "createdAt": "2026-06-13T10:00:00Z" }

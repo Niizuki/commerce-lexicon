@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.promotion", "title": "Someone else's shop",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "targets": [ { "$type": "app.temp.commerce.promotion#shopTarget" } ],
+  "mechanism": { "$type": "app.temp.commerce.promotion#salePrice", "price": { "amount": 100, "currency": "USD" } },
+  "createdAt": "2026-06-20T12:00:00Z" }

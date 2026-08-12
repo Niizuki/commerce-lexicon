@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "physical", "title": "Broken date",
+  "price": { "amount": 1800, "currency": "USD" }, "category": "home_goods",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "createdAt": "13 June 2026" }

@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.inventory",
+  "subject": "at://did:plc:seller/app.temp.commerce.listing/3kteeredm",
+  "availability": "in_stock", "quantity": 4, "managed": true,
+  "updatedAt": "2026-06-14T09:30:00Z" }

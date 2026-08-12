@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.productGroup", "title": "Anchor Group",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "optionAxes": [ {"name":"Color","values":["Red","Blue"]}, {"name":"Size","values":["S","M","L"]} ],
+  "category": "apparel", "fulfillmentKind": "physical", "createdAt": "2026-06-13T10:00:00Z" }

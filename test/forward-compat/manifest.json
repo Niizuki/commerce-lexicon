@@ -1,0 +1,10 @@
+{
+  "description": "Records that use extensions this schema does not declare, and which MUST still validate. The README claims that unknown category slugs stay protocol-valid and that new promotion mechanisms and targets arrive as additive union members; those claims are load-bearing for the whole boundary design, so they are tested rather than asserted. Phase 6 relaxes the 'declared union members only' rule that phase 3 applies to our own fixtures, because tolerating undeclared members is precisely what is under test here.",
+  "expectAccepted": {
+    "unknown-category-slug.json": "an app-registered category outside the 21 advisory slugs",
+    "unknown-fulfillment-kind.json": "a delivery kind beyond physical/digital/service",
+    "unknown-promotion-mechanism.json": "a percentage-discount mechanism added without a schema change",
+    "unknown-promotion-target.json": "a collection target added without a schema change",
+    "unknown-availability.json": "a backorder state added without a schema change"
+  }
+}

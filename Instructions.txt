@@ -1,6 +1,13 @@
 
 # Future Architecture: Commerce Schema Boundaries
 
+> IMPLEMENTED. Near-term items 1-5 and medium-term items 6-8 have landed in the
+> schema. Item 9 (generic attestation model) and items 10-15 remain deferred, as
+> this document intends. See docs/boundaries.md for what was built for each
+> section below, the reasoning, and what was deliberately left undone.
+>
+> This is a record of intent, not an open work list.
+
 ## Status
 
 This document describes planned architectural work beyond the initial commerce schema.

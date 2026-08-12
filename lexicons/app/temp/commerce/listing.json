@@ -4,37 +4,41 @@
   "defs": {
     "main": {
       "type": "record",
+      "description": "A public offer by a seller. Describes stable facts about the thing offered. Dynamic stock state lives in app.temp.commerce.inventory, temporary price rules in app.temp.commerce.promotion.",
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["type", "title", "price", "category", "shopRef", "createdAt"],
+        "required": ["price", "shopRef", "createdAt"],
         "properties": {
-          "type": {
-            "type": "string",
-            "knownValues": ["goods", "service", "digital"],
-            "description": "Listing type discriminator"
+          "structure": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#listingStructure",
+            "description": "Structural dimension. Absent means 'simple'."
+          },
+          "fulfillmentKind": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#fulfillmentKind",
+            "description": "Delivery-kind dimension. Required unless partOf is set, in which case it is inherited from the productGroup."
+          },
+          "purchase": {
+            "type": "union",
+            "refs": ["#externalPurchase", "#checkoutPurchase", "#informational"],
+            "description": "Purchase-mechanism dimension: how a consumer proceeds from discovery to purchase. Absent means no purchase path is advertised."
           },
           "title": {
             "type": "string",
-            "maxLength": 300
+            "maxLength": 300,
+            "description": "Required unless partOf is set, in which case it is inherited from the productGroup when absent."
           },
           "description": {
             "type": "string",
-            "maxLength": 3000
+            "maxLength": 3000,
+            "description": "Inherited from the productGroup when absent and partOf is set."
           },
           "price": {
             "type": "ref",
-            "ref": "app.temp.commerce.defs#price"
-          },
-          "availability": {
-            "type": "string",
-            "knownValues": ["in_stock", "out_of_stock", "pre_order", "discontinued"],
-            "description": "Availability status; can be computed from quantity or set independently"
-          },
-          "quantity": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Available inventory count, if known"
+            "ref": "app.temp.commerce.defs#price",
+            "description": "Normal/base offer price, before any promotion. Promotions are separate records and never rewrite this value."
           },
           "condition": {
             "type": "string",
@@ -42,17 +46,51 @@
           },
           "category": {
             "type": "ref",
-            "ref": "app.temp.commerce.defs#categorySlug"
+            "ref": "app.temp.commerce.defs#categorySlug",
+            "description": "Coarse category. Required unless partOf is set, in which case it is inherited from the productGroup."
           },
-          "subcategory": {
+          "classifications": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#vocabularyRef"
+            },
+            "maxLength": 10,
+            "description": "Detailed classification in external, independently versioned taxonomies. A listing may participate in several at once. Inherited from the productGroup when absent and partOf is set."
+          },
+          "specifications": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#specification"
+            },
+            "maxLength": 50,
+            "description": "Structured product properties. Inherited from the productGroup when absent and partOf is set."
+          },
+          "brand": {
             "type": "string",
-            "maxLength": 100,
-            "description": "Free-text subcategory; vocabulary maintained outside the Lexicon"
+            "maxLength": 200,
+            "description": "Inherited from the productGroup when absent and partOf is set."
           },
           "sku": {
             "type": "string",
             "maxLength": 100,
-            "description": "Seller-defined SKU for this variant"
+            "description": "Seller-defined SKU for this listing"
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#productIdentifier"
+            },
+            "maxLength": 10,
+            "description": "External product identifiers (GTIN, ISBN, MPN). Usable by indexers as a cross-seller join key without a canonical catalog layer."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string", "maxLength": 100 },
+            "maxLength": 20,
+            "description": "Seller-defined free-text tags"
           },
           "images": {
             "type": "array",
@@ -61,7 +99,20 @@
               "accept": ["image/*"],
               "maxSize": 1000000
             },
-            "maxLength": 10
+            "maxLength": 10,
+            "description": "Inherited from the productGroup when absent and partOf is set."
+          },
+          "physical": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#physicalProperties"
+          },
+          "shipping": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#shippingInfo"
+          },
+          "tax": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#taxInfo"
           },
           "shopRef": {
             "type": "string",
@@ -84,20 +135,8 @@
           },
           "details": {
             "type": "union",
-            "refs": ["#goodsDetails", "#serviceDetails", "#digitalDetails"],
-            "description": "Type-specific fields matching the type discriminator"
-          },
-          "externalUrl": {
-            "type": "string",
-            "format": "uri",
-            "maxLength": 2000,
-            "description": "External URL for purchasing (e.g. Amazon, eBay link)"
-          },
-          "checkoutUrl": {
-            "type": "string",
-            "format": "uri",
-            "maxLength": 2000,
-            "description": "Direct checkout URL if supported by seller platform"
+            "refs": ["#serviceDetails", "#digitalDetails"],
+            "description": "Intrinsic facts specific to a fulfillment kind. Physical properties are first-class fields, not a union member."
           },
           "hideFromFriends": {
             "type": "boolean",
@@ -118,25 +157,39 @@
         }
       }
     },
-    "goodsDetails": {
+    "externalPurchase": {
       "type": "object",
-      "description": "Type-specific fields for physical goods",
+      "description": "Purchase completes on an external site (e.g. a marketplace or the seller's own storefront)",
+      "required": ["url"],
       "properties": {
-        "shippingWeight": {
-          "type": "integer",
-          "description": "Weight in grams"
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000
         }
       }
     },
+    "checkoutPurchase": {
+      "type": "object",
+      "description": "Purchase begins at a checkout endpoint the seller controls. This schema describes the entry point only; checkout, payment, and reservation are transactional concerns outside the protocol.",
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000
+        }
+      }
+    },
+    "informational": {
+      "type": "object",
+      "description": "The listing advertises an offer but is not directly purchasable — e.g. contact-for-quote, or a catalog entry sold offline",
+      "properties": {}
+    },
     "serviceDetails": {
       "type": "object",
-      "description": "Type-specific fields for services and commissions",
+      "description": "Intrinsic fields for services and commissions",
       "properties": {
-        "slotsAvailable": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Number of service slots currently available"
-        },
         "turnaroundTime": {
           "type": "string",
           "maxLength": 100,
@@ -146,7 +199,7 @@
     },
     "digitalDetails": {
       "type": "object",
-      "description": "Type-specific fields for digital goods",
+      "description": "Intrinsic fields for digital goods",
       "properties": {
         "fileFormat": {
           "type": "string",

@@ -1,0 +1,3 @@
+{ "$type": "app.temp.commerce.inventory",
+  "subject": "at://did:plc:seller/app.temp.commerce.productGroup/g1",
+  "availability": "in_stock", "updatedAt": "2026-06-14T09:30:00Z" }

@@ -72,7 +72,7 @@
         "hobbies", "home_goods", "home_improvement", "kids", "musical",
         "office", "pets", "sporting", "video_games", "other"
       ],
-      "description": "Top-level category slug. Open/advisory knownValues — apps maintain canonical registries. Single source of truth for listing and productGroup."
+      "description": "Coarse top-level category slug, intended for simple applications. Open/advisory knownValues — apps maintain canonical registries. Single source of truth for listing and productGroup. Detailed classification belongs in #vocabularyRef, not here."
     },
     "optionAxis": {
       "type": "object",
@@ -88,6 +88,117 @@
           "items": { "type": "string", "maxLength": 200 },
           "maxLength": 100,
           "description": "Available values for this axis"
+        }
+      }
+    },
+    "listingStructure": {
+      "type": "string",
+      "knownValues": ["simple", "variant", "grouped"],
+      "default": "simple",
+      "description": "Structural relationship between listing records. 'simple' is a standalone listing; 'variant' is a member of a productGroup (partOf is set); 'grouped' is a listing that aggregates other listings. Orthogonal to fulfillmentKind and to the purchase mechanism."
+    },
+    "fulfillmentKind": {
+      "type": "string",
+      "knownValues": ["physical", "digital", "service"],
+      "description": "What kind of thing is delivered. Intrinsic to the offer, and orthogonal to listingStructure and to the purchase mechanism. Fulfillment logic (destinations, methods, rates, routing) is out of scope for this schema."
+    },
+    "vocabularyRef": {
+      "type": "object",
+      "description": "A pointer into an external, independently versioned vocabulary. Used wherever this schema must name a term it deliberately does not define: taxonomy classification, specification properties, shipping classes, and tax codes.",
+      "required": ["identifier"],
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Stable identifier of the vocabulary, preferably a URI (e.g. 'https://www.gs1.org/gpc'). Omitting it makes the identifier seller-local and non-interoperable."
+        },
+        "identifier": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Identifier of the term within the scheme"
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Version of the scheme this identifier was drawn from"
+        }
+      }
+    },
+    "specification": {
+      "type": "object",
+      "description": "A structured product property (material, screen size, battery capacity). Distinct from a variant axis: specifications describe the thing, variant axes distinguish siblings.",
+      "required": ["property", "value"],
+      "properties": {
+        "property": {
+          "type": "ref",
+          "ref": "app.temp.commerce.defs#vocabularyRef",
+          "description": "The property being described. A scheme-less identifier is free text and carries no interoperability guarantee."
+        },
+        "value": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "unit": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Unit of the value, preferably from a published unit vocabulary (e.g. UCUM)"
+        }
+      }
+    },
+    "productIdentifier": {
+      "type": "object",
+      "description": "An identifier assigned by an external identity scheme. Lets independent sellers' listings be recognized as offers for the same underlying product without this schema defining a canonical catalog.",
+      "required": ["scheme", "value"],
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "knownValues": ["gtin", "isbn", "issn", "mpn", "asin"],
+          "description": "Identity scheme. Open/advisory knownValues. 'gtin' covers UPC/EAN/JAN of any length."
+        },
+        "value": {
+          "type": "string",
+          "maxLength": 100
+        }
+      }
+    },
+    "physicalProperties": {
+      "type": "object",
+      "description": "Intrinsic physical facts about the thing offered. Inputs for fulfillment systems; this schema does not calculate with them.",
+      "properties": {
+        "lengthMm": { "type": "integer", "minimum": 0 },
+        "widthMm": { "type": "integer", "minimum": 0 },
+        "heightMm": { "type": "integer", "minimum": 0 },
+        "weightGrams": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "shippingInfo": {
+      "type": "object",
+      "description": "Basic fulfillment classification intrinsic to the listing. Shipping destinations, methods, rates, and pickup locations belong to a separate fulfillment system.",
+      "properties": {
+        "required": {
+          "type": "boolean",
+          "description": "True if physical shipping is required to fulfill this listing"
+        },
+        "class": {
+          "type": "ref",
+          "ref": "app.temp.commerce.defs#vocabularyRef",
+          "description": "Shipping class within a carrier's or seller's own scheme"
+        }
+      }
+    },
+    "taxInfo": {
+      "type": "object",
+      "description": "Basic tax facts about the offer. Rate tables, jurisdiction rules, calculation, and customer-specific determination are out of scope.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "knownValues": ["taxable", "exempt", "zero_rated", "reverse_charge", "not_applicable"],
+          "description": "Coarse tax status. Open/advisory knownValues."
+        },
+        "classification": {
+          "type": "ref",
+          "ref": "app.temp.commerce.defs#vocabularyRef",
+          "description": "Tax code within an external scheme, rather than an enum this schema assumes is globally sufficient"
         }
       }
     }

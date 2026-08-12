@@ -1,0 +1,6 @@
+{ "$type": "app.temp.commerce.promotion", "title": "Collection sale",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "targets": [ { "$type": "app.temp.commerce.promotion#collectionTarget",
+                 "ref": "at://did:plc:seller/app.temp.commerce.collection/summer" } ],
+  "mechanism": { "$type": "app.temp.commerce.promotion#salePrice", "price": { "amount": 500, "currency": "USD" } },
+  "createdAt": "2026-06-20T12:00:00Z" }

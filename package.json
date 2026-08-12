@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "validate": "node scripts/validate-lexicon.js"
+    "validate": "node scripts/validate-lexicon.js",
+    "test": "node scripts/validate-lexicon.js"
   },
   "dependencies": {
     "@atproto/lexicon": "^0.4.10"

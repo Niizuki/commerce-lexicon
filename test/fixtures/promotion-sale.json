@@ -1,0 +1,10 @@
+{ "$type": "app.temp.commerce.promotion", "title": "Summer Sale",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "targets": [ { "$type": "app.temp.commerce.promotion#productGroupTarget",
+                 "ref": "at://did:plc:seller/app.temp.commerce.productGroup/3ktee" },
+               { "$type": "app.temp.commerce.promotion#listingTarget",
+                 "ref": "at://did:plc:seller/app.temp.commerce.listing/3kmug" } ],
+  "mechanism": { "$type": "app.temp.commerce.promotion#salePrice",
+                 "price": { "amount": 1900, "currency": "USD" } },
+  "startsAt": "2026-07-01T00:00:00Z", "endsAt": "2026-07-31T23:59:59Z",
+  "createdAt": "2026-06-20T12:00:00Z" }

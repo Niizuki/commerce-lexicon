@@ -1,0 +1,96 @@
+{
+  "lexicon": 1,
+  "id": "app.temp.commerce.promotion",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A temporary rule affecting one or more offers. Targeting and mechanism are independent unions, so new mechanisms and new target kinds are added without multiplying record types. The protocol advertises promotions; it does not enforce them — redemption limits, coupon consumption, eligibility, and reservation belong to transactional systems.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["shopRef", "targets", "mechanism", "createdAt"],
+        "properties": {
+          "shopRef": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the shop issuing this promotion"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Display name for the promotion (e.g. 'Summer Sale')"
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "union",
+              "refs": ["#listingTarget", "#productGroupTarget", "#shopTarget"]
+            },
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "What this promotion applies to. Multiple promotions may target the same listing; AppViews decide which are active and applicable."
+          },
+          "mechanism": {
+            "type": "union",
+            "refs": ["#salePrice"],
+            "description": "How the promotion alters the offer. Open union — percentage discount, fixed discount, buy-X-get-Y, free shipping, and bundle mechanisms are additive members, not new record types."
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Absent means already in effect"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Absent means open-ended"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    },
+    "listingTarget": {
+      "type": "object",
+      "description": "Targets a single listing",
+      "required": ["ref"],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT URI of an app.temp.commerce.listing record"
+        }
+      }
+    },
+    "productGroupTarget": {
+      "type": "object",
+      "description": "Targets every variant listing in a product group",
+      "required": ["ref"],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT URI of an app.temp.commerce.productGroup record"
+        }
+      }
+    },
+    "shopTarget": {
+      "type": "object",
+      "description": "Targets every listing published by the issuing shop",
+      "properties": {}
+    },
+    "salePrice": {
+      "type": "object",
+      "description": "Replaces the listing's base price with a temporary price for the promotion window. The listing's own price field is never rewritten.",
+      "required": ["price"],
+      "properties": {
+        "price": {
+          "type": "ref",
+          "ref": "app.temp.commerce.defs#price"
+        }
+      }
+    }
+  }
+}

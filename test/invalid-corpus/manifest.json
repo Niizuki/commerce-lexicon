@@ -1,0 +1,19 @@
+{
+  "description": "A corpus built to violate each app-level invariant exactly once. Phase 7 runs the invariant checks over it and asserts the exact multiset of codes that fire — so a check that quietly stops working, or one that starts firing on innocent records, fails the build. shop.json and productGroup.json are clean anchors: without them, reference checks would fire everywhere and drown the signal.",
+  "records": {
+    "shop.json": "at://did:plc:seller/app.temp.commerce.shop/self",
+    "productGroup.json": "at://did:plc:seller/app.temp.commerce.productGroup/g1",
+    "inv1-variant-without-structure.json": "at://did:plc:seller/app.temp.commerce.listing/l1",
+    "inv2-standalone-missing-fields.json": "at://did:plc:seller/app.temp.commerce.listing/l2",
+    "inv3-unresolvable-group.json": "at://did:plc:seller/app.temp.commerce.listing/l3",
+    "inv4-service-with-digital-details.json": "at://did:plc:seller/app.temp.commerce.listing/l4",
+    "inv5-undeclared-axis.json": "at://did:plc:seller/app.temp.commerce.listing/l5",
+    "inv6-inventory-wrong-collection.json": "at://did:plc:seller/app.temp.commerce.inventory/i1",
+    "inv7-inventory-a.json": "at://did:plc:seller/app.temp.commerce.inventory/i2",
+    "inv7-inventory-b.json": "at://did:plc:seller/app.temp.commerce.inventory/i3",
+    "inv8-foreign-promotion.json": "at://did:plc:other/app.temp.commerce.promotion/p1",
+    "inv9-policy-empty.json": "at://did:plc:seller/app.temp.commerce.policy/pol1",
+    "inv10-listing-with-availability.json": "at://did:plc:seller/app.temp.commerce.listing/l6"
+  },
+  "expectViolations": ["INV1", "INV2", "INV3", "INV4", "INV5", "INV6", "INV7", "INV8", "INV9", "INV10"]
+}

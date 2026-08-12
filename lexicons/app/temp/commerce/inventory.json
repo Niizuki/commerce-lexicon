@@ -1,0 +1,41 @@
+{
+  "lexicon": 1,
+  "id": "app.temp.commerce.inventory",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Stock state for a single purchasable listing. Separate from the listing because inventory changes continuously while listing metadata does not; writing stock should not rewrite title, images, or description. Convention: use the subject listing's record key as this record's key, so stock updates are idempotent puts.",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": ["subject", "availability", "updatedAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the listing this stock state applies to. Availability belongs to purchasable listings, never to a productGroup."
+          },
+          "availability": {
+            "type": "string",
+            "knownValues": ["in_stock", "out_of_stock", "pre_order", "discontinued"],
+            "description": "Availability status. Open/advisory knownValues; richer states (backorder, per-location) are additive."
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Units available, if the seller tracks a count"
+          },
+          "managed": {
+            "type": "boolean",
+            "description": "True if quantity is maintained by an authoritative system and can be relied on; false or absent means availability is the seller's coarse assertion"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When this stock state was asserted. The freshness signal for consumers; there is no separate createdAt because only the current state is meaningful."
+          }
+        }
+      }
+    }
+  }
+}

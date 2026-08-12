@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.listing", "structure": "simple", "title": "No category, no kind",
+  "price": { "amount": 2500, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "createdAt": "2026-06-13T10:00:00Z" }

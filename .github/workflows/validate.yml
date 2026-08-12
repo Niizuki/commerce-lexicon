@@ -1,0 +1,20 @@
+name: validate
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # npm ci needs the committed lockfile: the checks are only meaningful if
+      # CI resolves the same @atproto/lexicon the schema was validated against.
+      - run: npm ci
+      - run: npm test
