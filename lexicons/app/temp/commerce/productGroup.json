@@ -4,10 +4,11 @@
   "defs": {
     "main": {
       "type": "record",
+      "description": "Groups variant listings and declares their option axes. Source of truth for the product-level facts its variants inherit. Holds no availability of its own — group availability is derived from its children by AppViews.",
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["title", "shopRef", "optionAxes", "category", "type", "createdAt"],
+        "required": ["title", "shopRef", "optionAxes", "category", "fulfillmentKind", "createdAt"],
         "properties": {
           "title": {
             "type": "string",
@@ -34,12 +35,45 @@
           },
           "category": {
             "type": "ref",
-            "ref": "app.temp.commerce.defs#categorySlug"
+            "ref": "app.temp.commerce.defs#categorySlug",
+            "description": "Coarse category for every variant in this group. Inherited by variant listings."
           },
-          "type": {
+          "fulfillmentKind": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#fulfillmentKind",
+            "description": "Delivery kind for every variant in this group. Inherited by variant listings."
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#vocabularyRef"
+            },
+            "maxLength": 10,
+            "description": "Detailed classification in external taxonomies. Inherited by variant listings."
+          },
+          "specifications": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#specification"
+            },
+            "maxLength": 50,
+            "description": "Structured product properties shared by every variant. Inherited by variant listings."
+          },
+          "brand": {
             "type": "string",
-            "knownValues": ["goods", "service", "digital"],
-            "description": "Listing type for all variants in this group. Source of truth; variant listings mirror this value."
+            "maxLength": 200,
+            "description": "Inherited by variant listings."
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#productIdentifier"
+            },
+            "maxLength": 10,
+            "description": "Identifiers that apply to the product as a whole. Variant-specific identifiers (a per-variant GTIN) belong on the variant listing and are not inherited."
           },
           "images": {
             "type": "array",
@@ -48,7 +82,8 @@
               "accept": ["image/*"],
               "maxSize": 1000000
             },
-            "maxLength": 10
+            "maxLength": 10,
+            "description": "Inherited by variant listings that carry no images of their own."
           },
           "createdAt": {
             "type": "string",

@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.listing", "price": { "amount": 2500, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "partOf": "at://did:plc:seller/app.temp.commerce.productGroup/g1",
+  "variantProperties": [ {"axis":"Color","value":"Red"} ],
+  "createdAt": "2026-06-13T10:00:00Z" }

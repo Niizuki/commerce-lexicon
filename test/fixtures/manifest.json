@@ -1,0 +1,16 @@
+{
+  "description": "AT URI for each fixture. Fixtures are byte-exact records, so their address cannot live inside the file; it lives here. This is what lets the corpus be treated as a small federation of linked records and lets the app-level invariants be checked. did:plc:seller is the shop owner; did:plc:buyer authors the review, because reviews live in the reviewer's repo.",
+  "records": {
+    "shop.json": "at://did:plc:seller/app.temp.commerce.shop/self",
+    "productGroup.json": "at://did:plc:seller/app.temp.commerce.productGroup/3ktee",
+    "listing-variant.json": "at://did:plc:seller/app.temp.commerce.listing/3kteeredm",
+    "listing-standalone-physical.json": "at://did:plc:seller/app.temp.commerce.listing/3kmug",
+    "listing-service.json": "at://did:plc:seller/app.temp.commerce.listing/3kportrait",
+    "listing-digital.json": "at://did:plc:seller/app.temp.commerce.listing/3ksounds",
+    "inventory.json": "at://did:plc:seller/app.temp.commerce.inventory/3kteeredm",
+    "promotion-sale.json": "at://did:plc:seller/app.temp.commerce.promotion/3ksummer",
+    "promotion-shopwide.json": "at://did:plc:seller/app.temp.commerce.promotion/3kclearance",
+    "policy-returns.json": "at://did:plc:seller/app.temp.commerce.policy/3kreturns",
+    "review.json": "at://did:plc:buyer/app.temp.commerce.review/3kreview1"
+  }
+}

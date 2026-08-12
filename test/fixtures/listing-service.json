@@ -1,0 +1,9 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "service",
+  "title": "Custom portrait commission", "price": { "amount": 15000, "currency": "EUR" },
+  "category": "hobbies", "condition": "notApplicable",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "shipping": { "required": false },
+  "tax": { "status": "reverse_charge" },
+  "details": { "$type": "app.temp.commerce.listing#serviceDetails", "turnaroundTime": "2-3 weeks" },
+  "purchase": { "$type": "app.temp.commerce.listing#informational" },
+  "createdAt": "2026-06-13T10:00:00Z" }

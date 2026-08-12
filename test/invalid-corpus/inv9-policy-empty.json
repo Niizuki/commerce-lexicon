@@ -1,0 +1,2 @@
+{ "$type": "app.temp.commerce.policy", "subject": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "kind": "returns", "title": "Says nothing", "createdAt": "2026-06-13T10:00:00Z" }

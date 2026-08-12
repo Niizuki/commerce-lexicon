@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "physical", "title": "Bad currency code",
+  "price": { "amount": 1800, "currency": "USDD" }, "category": "home_goods",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "createdAt": "2026-06-13T10:00:00Z" }

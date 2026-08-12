@@ -1,6 +1,11 @@
-{ "$type": "app.temp.commerce.listing", "type": "goods", "title": "Classic Tee — Red / M",
-  "price": { "amount": 2500, "currency": "USD" }, "category": "apparel",
-  "shopRef": "at://did:plc:abc/app.temp.commerce.shop/self",
-  "partOf": "at://did:plc:abc/app.temp.commerce.productGroup/xyz",
+{ "$type": "app.temp.commerce.listing", "structure": "variant",
+  "title": "Classic Tee — Red / M",
+  "price": { "amount": 2500, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "partOf": "at://did:plc:seller/app.temp.commerce.productGroup/3ktee",
   "variantProperties": [ {"axis":"Color","value":"Red"}, {"axis":"Size","value":"M"} ],
-  "sku": "TEE-RED-M", "quantity": 4, "createdAt": "2026-06-13T10:00:00Z" }
+  "sku": "TEE-RED-M",
+  "identifiers": [ { "scheme": "gtin", "value": "00012345600029" } ],
+  "physical": { "weightGrams": 200 },
+  "purchase": { "$type": "app.temp.commerce.listing#checkoutPurchase", "url": "https://acme.example/checkout/tee-red-m" },
+  "createdAt": "2026-06-13T10:00:00Z" }

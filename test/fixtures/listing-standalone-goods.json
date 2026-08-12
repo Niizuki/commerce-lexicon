@@ -1,7 +1,0 @@
-{ "$type": "app.temp.commerce.listing", "type": "goods", "title": "Classic Tee",
-  "price": { "amount": 2500, "currency": "USD" }, "category": "apparel",
-  "shopRef": "at://did:plc:abc/app.temp.commerce.shop/self",
-  "availability": "in_stock", "quantity": 12, "condition": "new",
-  "details": { "$type": "app.temp.commerce.listing#goodsDetails", "shippingWeight": 200 },
-  "labels": { "$type": "com.atproto.label.defs#selfLabels", "values": [{ "val": "handmade" }] },
-  "createdAt": "2026-06-13T10:00:00Z" }

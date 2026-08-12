@@ -1,3 +1,4 @@
-{ "$type": "app.temp.commerce.review", "subject": "at://did:plc:abc/app.temp.commerce.productGroup/xyz",
-  "rating": 5, "body": "Great fit", "variantSnapshot": [ {"axis":"Color","value":"Red"},{"axis":"Size","value":"M"} ],
+{ "$type": "app.temp.commerce.review", "subject": "at://did:plc:seller/app.temp.commerce.productGroup/3ktee",
+  "rating": 5, "title": "Holds up", "body": "Great fit",
+  "variantSnapshot": [ {"axis":"Color","value":"Red"},{"axis":"Size","value":"M"} ],
   "createdAt": "2026-06-13T10:00:00Z" }

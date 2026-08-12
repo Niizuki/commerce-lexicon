@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "app.temp.commerce.policy",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A seller policy, published as its own record rather than as fields on the shop. A policy changes on its own schedule and offers made under an earlier version may still need to reference it, so policies must be addressable and must not be inseparable from seller identity. This is not a legal-policy system; it records what the seller published and when it applied.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "kind", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the shop this policy belongs to"
+          },
+          "kind": {
+            "type": "string",
+            "knownValues": ["returns", "shipping", "terms", "privacy", "warranty"],
+            "description": "Policy kind. Open/advisory knownValues."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 20000,
+            "description": "Policy text. At least one of content or url should be present."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "Canonical location of the policy, if it is hosted elsewhere"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When this policy took effect. Absent means it applies from creation."
+          },
+          "effectiveUntil": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When this policy stopped applying. Absent means it is current. Superseded policies should be retained rather than deleted so earlier offers stay resolvable."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

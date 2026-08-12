@@ -1,0 +1,13 @@
+{
+  "description": "Records that MUST be rejected by the schema, with the substring the rejection message has to contain. A validator that only ever sees valid input proves nothing; these pin down that required fields, formats, string lengths, numeric bounds, array bounds, and union members are all actually enforced. Matching on the message (not just on failure) stops a fixture from passing for an unrelated reason after a schema edit.",
+  "expectErrors": {
+    "inventory-missing-availability.json": "must have the property \"availability\"",
+    "listing-bad-datetime.json": "Record/createdAt must be an valid atproto datetime",
+    "listing-bad-shopref.json": "Record/shopRef must be a valid at-uri",
+    "listing-currency-too-long.json": "Record/price/currency must not be longer than 3 characters",
+    "listing-price-not-integer.json": "Record/price/amount must be an integer",
+    "listing-purchase-missing-url.json": "Record/purchase must have the property \"url\"",
+    "promotion-empty-targets.json": "Record/targets must not have fewer than 1 elements",
+    "review-rating-out-of-range.json": "Record/rating can not be greater than 5"
+  }
+}

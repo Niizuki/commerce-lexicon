@@ -1,5 +1,6 @@
 node_modules/
-package-lock.json
 .DS_Store
 .vs/
-docs/
+
+# Local-only working notes. Published docs live directly in docs/ and are tracked.
+docs/internal/

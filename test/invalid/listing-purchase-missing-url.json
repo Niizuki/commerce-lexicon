@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "physical", "title": "Purchase without a URL",
+  "price": { "amount": 1800, "currency": "USD" }, "category": "home_goods",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "purchase": { "$type": "app.temp.commerce.listing#externalPurchase" },
+  "createdAt": "2026-06-13T10:00:00Z" }

@@ -1,4 +1,9 @@
 { "$type": "app.temp.commerce.productGroup", "title": "Classic Tee",
-  "shopRef": "at://did:plc:abc/app.temp.commerce.shop/self",
+  "description": "Heavyweight cotton tee.",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
   "optionAxes": [ {"name":"Color","values":["Red","Blue"]}, {"name":"Size","values":["S","M","L"]} ],
-  "category": "apparel", "type": "goods", "createdAt": "2026-06-13T10:00:00Z" }
+  "category": "apparel", "fulfillmentKind": "physical", "brand": "Acme",
+  "classifications": [ { "scheme": "https://www.gs1.org/gpc", "identifier": "10001184", "version": "2025-06" } ],
+  "specifications": [ { "property": { "scheme": "https://schema.org", "identifier": "material" }, "value": "cotton" } ],
+  "identifiers": [ { "scheme": "mpn", "value": "ACME-TEE" } ],
+  "createdAt": "2026-06-13T10:00:00Z" }

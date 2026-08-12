@@ -1,1 +1,4 @@
-{ "$type": "app.temp.commerce.shop", "name": "Acme Goods", "description": "Quality widgets", "createdAt": "2026-06-13T10:00:00Z" }
+{ "$type": "app.temp.commerce.shop", "name": "Acme Goods", "description": "Quality widgets",
+  "website": "https://acme.example",
+  "location": { "countryCode": "PT", "region": "Lisboa", "locality": "Lisbon", "postalPrefix": "1200", "isRemote": false },
+  "createdAt": "2026-06-13T10:00:00Z" }

@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.promotion", "title": "15% off everything",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "targets": [ { "$type": "app.temp.commerce.promotion#shopTarget" } ],
+  "mechanism": { "$type": "app.temp.commerce.promotion#percentageDiscount", "percent": 15 },
+  "createdAt": "2026-06-20T12:00:00Z" }
