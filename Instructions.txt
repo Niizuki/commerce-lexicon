@@ -1,0 +1,671 @@
+
+# Future Architecture: Commerce Schema Boundaries
+
+## Status
+
+This document describes planned architectural work beyond the initial commerce schema.
+
+The purpose is not to fully specify every subsystem now. Instead, it records the intended boundaries so that the initial implementation does not accidentally couple concepts that should be able to evolve independently.
+
+The guiding principle is:
+
+> The core commerce schema should describe stable public facts about an offer. Systems with different lifecycles, authorities, or complexity should remain separate and interact through explicit references.
+
+Where a cleaner architectural boundary is known, we should prefer it over a shortcut that makes the first implementation slightly easier. Early convenience is not sufficient reason to introduce coupling that may become difficult to remove once other implementations depend on the schema.
+
+---
+
+# 1. Core Commerce Schema
+
+The core should remain deliberately small.
+
+Its responsibility is to describe the seller, the listing, and the relationship between related listings.
+
+Likely core concepts include:
+
+- Shop
+- Listing
+- Product group / variant relationship
+- Title and descriptions
+- Images and media
+- Brand
+- SKU
+- GTIN or other product identifiers
+- Condition
+- Coarse category
+- Tags
+- Base price
+- Physical properties such as dimensions and weight
+- Basic fulfillment classification
+- Basic tax classification
+
+The core should avoid becoming a universal representation of every commerce feature.
+
+A small seller should be able to publish only a shop and listings and still participate fully in the ecosystem.
+
+More advanced sellers can publish additional records from surrounding schemas.
+
+---
+
+# 2. Separate Listing Dimensions
+
+The current listing `type` concept should be split because it combines several unrelated dimensions.
+
+These should be modeled independently.
+
+## Listing structure
+
+Describes the structural relationship between records.
+
+Examples:
+
+- simple
+- variant
+- grouped
+
+## Fulfillment kind
+
+Describes what kind of thing is being delivered.
+
+Examples:
+
+- physical
+- digital
+- service
+
+## Purchase mechanism
+
+Describes how the consumer proceeds from discovery to purchase.
+
+Examples may include:
+
+- external URL
+- checkout endpoint
+- informational-only listing
+
+These dimensions should remain orthogonal.
+
+For example, a listing may simultaneously be:
+
+- a variant,
+- a physical product,
+- and purchased through an external checkout.
+
+No single `type` enum should attempt to encode all combinations.
+
+---
+
+# 3. Promotions
+
+Promotions should be a separate subsystem rather than fields embedded permanently into a listing.
+
+The current concept:
+
+```text
+regularPrice
+salePrice
+saleStartsAt
+saleEndsAt
+```
+
+should therefore not define the permanent promotion architecture.
+
+The listing should expose its normal/base offer price.
+
+A promotion should describe a temporary rule affecting that offer.
+
+## Proposed shape
+
+Conceptually:
+
+```text
+Promotion
+    subject / targets
+    startsAt?
+    endsAt?
+    mechanism
+```
+
+The promotion mechanism should be polymorphic through a Lexicon union.
+
+Possible future mechanisms include:
+
+```text
+SalePrice
+PercentageDiscount
+FixedDiscount
+BuyXGetY
+FreeShipping
+BundleDiscount
+```
+
+The initial sale-price mechanism would therefore be one promotion type rather than a special case built directly into every listing.
+
+## Independent evolution
+
+Promotion targeting and promotion mechanism should be separate concepts.
+
+For example:
+
+```text
+Promotion
+    targets
+    mechanism
+```
+
+rather than creating combinations such as:
+
+```text
+ProductPercentageDiscount
+GroupPercentageDiscount
+CategoryPercentageDiscount
+ProductFixedDiscount
+...
+```
+
+Possible targets may eventually include:
+
+- individual listing
+- product group
+- collection
+- seller-wide scope
+- taxonomy/category selection
+
+Possible mechanisms should evolve independently.
+
+## Multiple promotions
+
+Because promotions are separate records, multiple promotions can naturally reference the same listing.
+
+This avoids embedding a fixed number or fixed structure of promotions into the listing.
+
+AppViews and commerce applications can determine which promotions are active and applicable.
+
+## Scope limitation
+
+The public protocol describes and advertises promotions.
+
+It should not attempt to perform checkout-time enforcement such as:
+
+- per-user redemption limits
+- coupon consumption
+- account eligibility
+- transactional reservation
+- payment enforcement
+
+Those concerns belong to transactional commerce systems.
+
+---
+
+# 4. Inventory
+
+Inventory is a strong candidate for a separate record.
+
+Inventory has a fundamentally different lifecycle from listing metadata.
+
+A listing title, description, category, or photograph may remain unchanged for months.
+
+Inventory can change continuously.
+
+Updating the entire listing every time stock changes unnecessarily couples slow-changing metadata with highly dynamic state.
+
+## Proposed direction
+
+```text
+Inventory
+    subject -> listing
+    availability
+    quantity?
+    managed?
+```
+
+Future versions may introduce more sophisticated mechanisms, for example:
+
+- inventory by warehouse
+- inventory by location
+- batch inventory
+- external inventory provider
+- reservations
+- backorder state
+- preorder state
+
+These do not need to be part of the initial specification.
+
+The important decision is that the architectural seam exists.
+
+## Group availability
+
+Availability should belong to purchasable listings, not product groups.
+
+Group availability should be derived:
+
+```text
+groupAvailable =
+    any(child listing is available)
+```
+
+This calculation belongs naturally in AppViews/indexers.
+
+The group should not maintain a second authoritative availability value because that creates two sources of truth.
+
+---
+
+# 5. Policies
+
+Seller policies should likely become first-class records rather than permanent fields embedded into the shop record.
+
+Examples include:
+
+- returns policy
+- shipping policy
+- terms
+- privacy policy
+- warranty policy
+
+The primary reason is historical state.
+
+A seller may change a return policy over time, but transactions or offers created under the previous policy may still need to reference it.
+
+Conceptually:
+
+```text
+Policy
+    subject -> shop
+    kind
+    content / URL
+    effectiveFrom?
+    effectiveUntil?
+```
+
+This also allows future policy schemas to evolve independently from the shop schema.
+
+The initial implementation does not need a sophisticated legal-policy system.
+
+The main goal is to avoid making mutable policies inseparable from seller identity.
+
+---
+
+# 6. Taxonomy
+
+Detailed product taxonomy should not become part of the core commerce schema.
+
+The core may retain a broad category useful for simple applications.
+
+More detailed classification should point to external/versioned taxonomies.
+
+Conceptually:
+
+```text
+classification
+    scheme
+    identifier
+```
+
+A listing should eventually be able to participate in multiple classification systems.
+
+Examples could include:
+
+- general retail taxonomy
+- electronics taxonomy
+- books/media taxonomy
+- automotive taxonomy
+- regional regulatory taxonomy
+- community-defined taxonomies
+
+The commerce protocol should not attempt to define one universal ontology.
+
+---
+
+# 7. Structured Specifications
+
+Product specifications are distinct from variant axes.
+
+Examples include:
+
+- material
+- screen size
+- battery capacity
+- processor
+- storage capacity
+- energy rating
+
+Initially, these may be represented simply.
+
+However, free-form name/value pairs eventually create interoperability problems:
+
+```text
+Screen Size = 27"
+screen_size = 27 inch
+Display diagonal = 686 mm
+```
+
+These may all represent the same property.
+
+The architecture should therefore leave space for an external specification vocabulary.
+
+Conceptually:
+
+```text
+Specification
+    property
+        scheme
+        identifier
+
+    value
+    unit?
+```
+
+A future taxonomy may define which specification properties are meaningful for a particular category.
+
+The full system does not need to be designed now.
+
+The important requirement is that current specification fields should not prevent this evolution.
+
+---
+
+# 8. Fulfillment and Shipping
+
+Intrinsic facts about a listing belong in the listing.
+
+Examples:
+
+- physical dimensions
+- weight
+- shipping required
+- shipping class
+- fulfillment kind
+
+Actual fulfillment logic should remain separate.
+
+Future fulfillment systems may describe:
+
+- shipping destinations
+- shipping methods
+- shipping rate calculation
+- pickup locations
+- warehouse routing
+- delivery providers
+- service areas
+
+The useful distinction is:
+
+> A listing describes properties of the thing being offered. A fulfillment system describes how that thing can be delivered.
+
+The commerce schema should provide the inputs required by fulfillment systems without attempting to become one.
+
+---
+
+# 9. Tax
+
+Tax follows a similar boundary.
+
+The listing may expose basic tax-related facts or classification.
+
+Examples:
+
+```text
+tax status
+tax classification
+```
+
+However, the core should not contain:
+
+- tax rate tables
+- jurisdiction rules
+- tax calculation
+- tax collection logic
+- customer-specific tax determination
+
+These belong to separate systems.
+
+Future tax classification should preferably be capable of referring to external schemes:
+
+```text
+TaxClassification
+    scheme
+    code
+```
+
+rather than assuming one globally sufficient enum.
+
+---
+
+# 10. Canonical Product Identity / Catalog
+
+GTIN and similar identifiers allow multiple seller listings to be recognized as offers for the same underlying product.
+
+For example:
+
+```text
+Seller A listing
+    GTIN X
+
+Seller B listing
+    GTIN X
+```
+
+An AppView can already use this as a cross-marketplace join key.
+
+This may eventually justify a separate canonical product/catalog layer:
+
+```text
+Product
+    identity
+    manufacturer
+    canonical metadata
+
+Offer
+    seller
+    price
+    availability
+```
+
+This should be explicitly deferred.
+
+A federated canonical product system raises difficult questions:
+
+- Who publishes the canonical product?
+- Who is trusted to modify its metadata?
+- Can multiple competing product records exist?
+- How are editions/revisions represented?
+- What happens when product identifiers conflict?
+- How are manufacturer and community metadata reconciled?
+
+These questions are substantially larger than the initial commerce protocol.
+
+GTIN and related identifiers provide much of the immediate interoperability benefit without requiring this problem to be solved now.
+
+A future `catalog` domain can explore this independently.
+
+---
+
+# 11. Reviews and Attestations
+
+Reviews should remain buyer-owned records rather than properties embedded into seller listings.
+
+This preserves authorship and makes reviews naturally portable across applications.
+
+A review should not contain a self-asserted `verified` boolean.
+
+Verification is an attestation, not a property that the review author can meaningfully declare about themselves.
+
+Future systems may introduce separate records representing evidence or attestations such as:
+
+- purchase receipt
+- purchase verification
+- marketplace attestation
+- seller confirmation
+- external payment proof
+
+Conceptually:
+
+```text
+Review
+    author
+    subject
+    content
+
+Attestation
+    issuer
+    subject
+    claim
+```
+
+Applications can then decide which attestations they trust.
+
+This is preferable to embedding trust decisions directly into review records.
+
+---
+
+# 12. Derived State Belongs in AppViews
+
+The protocol should avoid storing values that can be reliably derived from authoritative records.
+
+Examples include:
+
+```text
+product group availability
+active promotion set
+price ranges across variants
+minimum / maximum variant price
+review aggregates
+inventory aggregates
+```
+
+These are useful application-level values but poor candidates for duplicated protocol state.
+
+AppViews/indexers are specifically suited to calculating and caching such aggregates.
+
+The authoritative records should remain simple and internally consistent.
+
+---
+
+# 13. General Boundary Rule
+
+A useful decision rule for future design work is:
+
+A concept should be considered for extraction when one or more of these conditions apply:
+
+1. It changes on a substantially different lifecycle from the listing.
+2. Multiple instances may apply simultaneously.
+3. It has a different authoritative author or issuer.
+4. It may grow into a substantial subsystem.
+5. It represents a relationship rather than an intrinsic property.
+6. It is derived state rather than authoritative state.
+7. Embedding it would require increasingly complex conditional fields.
+8. Independent implementations may reasonably extend it without changing the commerce core.
+
+This is not a requirement to make every concept its own record.
+
+Excessive fragmentation would also make the protocol difficult to use.
+
+The goal is a small number of clean architectural boundaries.
+
+---
+
+# 14. Intended Layering
+
+The architecture can be viewed approximately as:
+
+```text
+                      Commerce Core
+                           |
+          +----------------+----------------+
+          |                |                |
+         Shop         Product Group       Listing
+                                             |
+          +----------------+----------------+----------------+
+          |                |                |                |
+      Promotion         Inventory         Review          Policy
+
+External / independently evolving domains:
+
+Taxonomy -------------> classification
+Specifications -------> structured product properties
+Fulfillment ----------> shipping / delivery / pickup
+Tax ------------------> calculation and jurisdiction rules
+Attestations ---------> verification and trust claims
+Catalog --------------> canonical product identity
+```
+
+Not every surrounding subsystem needs to be specified by this project.
+
+The commerce core should make it possible for those systems to exist without requiring changes to existing listing records.
+
+---
+
+# 15. Implementation Priority
+
+The likely order of architectural work is:
+
+## Near-term
+
+1. Separate listing structure, fulfillment kind, and purchase mechanism.
+2. Define the promotion boundary.
+3. Extract inventory.
+4. Determine the final inheritance semantics for grouped/variant listings.
+5. Extract or define the boundary for seller policies.
+
+## Medium-term
+
+6. Improve taxonomy references.
+7. Establish structured specification extension points.
+8. Refine shipping and tax classifications without implementing calculation systems.
+9. Define a generic attestation model if verification becomes necessary.
+
+## Explicitly deferred
+
+10. Full promotion engine.
+11. Checkout enforcement.
+12. Fulfillment/rate calculation.
+13. Tax calculation.
+14. Inventory reservations.
+15. Canonical federated product catalog.
+
+---
+
+# 16. Design Principle
+
+The intended architecture should remain usable at multiple levels of sophistication.
+
+A hobby seller may publish:
+
+```text
+Shop
+Listing
+```
+
+A more advanced seller may additionally publish:
+
+```text
+Inventory
+Promotion
+Policy
+```
+
+A large retailer may integrate:
+
+```text
+external taxonomy
+structured specifications
+fulfillment services
+tax systems
+attestation systems
+```
+
+All of these should remain interoperable through the same core commerce model.
+
+The goal is therefore not to build a schema containing every feature found in mature commerce platforms.
+
+The goal is to define a stable commerce language with clean extension boundaries.
+
+Whenever there is a choice between:
+
+- a convenient special case in the core, and
+- a slightly more deliberate boundary that allows independent future evolution,
+
+the latter should generally be preferred.
+
+The implementation can remain simple.
+
+The architecture should not be made permanently simple at the cost of future correctness.
