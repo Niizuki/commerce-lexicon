@@ -1,0 +1,9 @@
+{ "$type": "app.temp.commerce.listing", "structure": "variant",
+  "title": "Classic Tee — Blue / any size",
+  "price": { "amount": 2500, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "partOf": "at://did:plc:seller/app.temp.commerce.productGroup/3ktee",
+  "variantProperties": [ {"axis":"Color","value":"Blue"}, {"axis":"Size"} ],
+  "sku": "TEE-BLUE-ANY",
+  "purchase": { "$type": "app.temp.commerce.listing#checkoutPurchase", "url": "https://acme.example/checkout/tee-blue" },
+  "createdAt": "2026-06-14T10:00:00Z" }

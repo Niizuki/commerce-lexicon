@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.listing", "fulfillmentKind": "digital", "title": "Withdrawn singular format",
+  "category": "musical", "price": { "amount": 900, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "details": { "$type": "app.temp.commerce.listing#digitalDetails", "fileFormat": "ZIP" },
+  "createdAt": "2026-06-13T10:00:00Z" }

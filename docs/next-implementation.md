@@ -1,10 +1,18 @@
 # Catalogue Completeness — Implementation Brief
 
+> IMPLEMENTED, except A2. §A1 (`fulfillmentProfile`), all eleven items of §B, and the
+> §C1 decision have landed in the schema. §A2 (`collection`) was skipped, as this brief
+> permits — it is the only item here no reviewer asked for. The §D seams remain unbuilt
+> and their triggers unmet.
+>
+> See [boundaries.md](boundaries.md) §17 for what was built for each item, the reasoning,
+> and what was deliberately left undone. This is now a record of intent, not an open work list.
+
 ## Status
 
 This is a work brief, not a record of what exists. It specifies the next round of schema changes and the reasoning behind each one.
 
-Its source is the review by auadix (Al, maintainer of Open Market) in [discussion #4862](https://github.com/bluesky-social/atproto/discussions/4862#discussioncomment-17901346), dated 2026-08-05. That review is field-level and concrete. `Instructions.txt` answered its *architectural* questions — pricing and promotions, inventory extraction, policies, taxonomy, specifications, the shipping/tax boundary — and those answers are already implemented and recorded in [boundaries.md](boundaries.md). What was never carried across is the field-level half of the review, which is what this brief covers.
+Its source is the review by auadix (Al, maintainer of Open Market) in [discussion #4862](https://github.com/bluesky-social/atproto/discussions/4862#discussioncomment-17901346), dated 2026-08-05. That review is field-level and concrete. The original architectural brief answered its *architectural* questions — pricing and promotions, inventory extraction, policies, taxonomy, specifications, the shipping/tax boundary — and those answers are already implemented and recorded in [boundaries.md](boundaries.md). What was never carried across is the field-level half of the review, which is what this brief covers.
 
 The test the review applied is the one to keep applying:
 
@@ -16,7 +24,7 @@ Today the answer is no in thirteen specific places.
 
 ## The rule for where things go
 
-Same rule as before, from `Instructions.txt` §13. A concept earns its own record when it changes on a different lifecycle, when several may apply at once, when it has a different author, when it may grow into a subsystem, when it is a relationship rather than an intrinsic property, or when embedding it would demand increasingly conditional fields.
+Same rule as before, from [boundaries.md](boundaries.md) §13. A concept earns its own record when it changes on a different lifecycle, when several may apply at once, when it has a different author, when it may grow into a subsystem, when it is a relationship rather than an intrinsic property, or when embedding it would demand increasingly conditional fields.
 
 The counterweight matters just as much: fragmenting everything makes the protocol unusable. A field that is small, intrinsic to one record, and stable belongs inline.
 
@@ -56,7 +64,7 @@ Once declared, those fixtures still pass, but they stop testing anything: they a
 
 **Source**: review §15 asks for `handlingTime` and `shipsTo` on the shop record.
 
-**Why not on the shop.** `Instructions.txt` §8 names shipping destinations, methods, pickup locations, routing, and service areas as belonging to a separate fulfillment system, and draws the line as: *a listing describes properties of the thing being offered; a fulfillment system describes how that thing can be delivered.* `shipsTo` is a delivery destination and `handlingTime` is a delivery promise. Putting them on the shop record would place the first two fields of a fulfillment system inside seller identity, and every subsequent field — pickup locations, per-class handling, regional cutoffs — would have to follow them there or live somewhere inconsistent.
+**Why not on the shop.** [boundaries.md](boundaries.md) §8 names shipping destinations, methods, pickup locations, routing, and service areas as belonging to a separate fulfillment system, and draws the line as: *a listing describes properties of the thing being offered; a fulfillment system describes how that thing can be delivered.* `shipsTo` is a delivery destination and `handlingTime` is a delivery promise. Putting them on the shop record would place the first two fields of a fulfillment system inside seller identity, and every subsequent field — pickup locations, per-class handling, regional cutoffs — would have to follow them there or live somewhere inconsistent.
 
 It also fails the lifecycle test. Shipping coverage changes with carrier contracts and seasons; a shop's name and logo do not.
 
@@ -77,7 +85,7 @@ fulfillmentProfile
 
 Record key `tid`. Several profiles per shop is the point — a seller ships to the EU in two days and worldwide in ten — so this is not a `self` record.
 
-**Explicitly out of scope**, and worth stating in the record description so the boundary survives contact with contributors: rate tables, rate calculation, carrier selection, and label generation. Deferred item 12 in `Instructions.txt`. This record says *where* and *how soon*, never *how much*.
+**Explicitly out of scope**, and worth stating in the record description so the boundary survives contact with contributors: rate tables, rate calculation, carrier selection, and label generation. Deferred item 12 in [boundaries.md](boundaries.md#15-implementation-priority). This record says *where* and *how soon*, never *how much*.
 
 **Future members** (additive, no schema change to anything else): pickup locations, per-`shippingClass` handling times, cutoff times, service areas for `fulfillmentKind: service`.
 
@@ -124,7 +132,7 @@ When this lands, add `#collectionTarget` to `promotion.targets` and extend INV6 
 
 `defs#groupedItem` = `{ item (at-uri, required), quantity (int, min 1), title (string) }`.
 
-**Why inline rather than a `bundle` record.** Composition is authored by the bundle itself and is meaningless without it, so it fails the "different author" and "multiple instances" tests. It is also already split correctly along the axis that matters: the *composition* is here, and the *discount* is a promotion mechanism (`BundleDiscount` is named as a future member in `Instructions.txt` §3). Extracting composition as well would leave a bundle record whose only content is a list.
+**Why inline rather than a `bundle` record.** Composition is authored by the bundle itself and is meaningless without it, so it fails the "different author" and "multiple instances" tests. It is also already split correctly along the axis that matters: the *composition* is here, and the *discount* is a promotion mechanism (`BundleDiscount` is named as a future member in [boundaries.md](boundaries.md) §3). Extracting composition as well would leave a bundle record whose only content is a list.
 
 `title` is denormalized deliberately, on the same reasoning as the review variant snapshot: the group still renders when an item is deleted or its server is unreachable.
 
@@ -251,7 +259,7 @@ Each of these has a trigger. Building before the trigger is speculation; buildin
 
 - **`license`** — usage rights for digital goods: commercial use, seats, territory, DRM. B4 puts four scalar fields on `#digitalDetails`, which is right for download terms and wrong for rights. **Trigger**: the first request that is about permission rather than delivery.
 - **Seller rating dimensions** — communication, shipping speed, item as described, as separate scores. **Trigger**: an app that wants to render them. B10 makes shop-level reviews possible first; dimensions are additive on top and do not change `subject`.
-- **`attestation`** — `{ issuer, subject, claim }`, the replacement for the `verified` boolean that was removed. Deferred item 9 in `Instructions.txt`, and still correctly deferred. **Trigger**: a real issuer exists — a logistics receipt, a marketplace confirmation, an agent-checkout order record.
+- **`attestation`** — `{ issuer, subject, claim }`, the replacement for the `verified` boolean that was removed. Deferred item 9 in [boundaries.md](boundaries.md#not-implemented-and-why), and still correctly deferred. **Trigger**: a real issuer exists — a logistics receipt, a marketplace confirmation, an agent-checkout order record.
 - **`catalog`** — canonical product identity across sellers. Deferred item 15. `identifiers[]` already provides the join key that delivers most of the benefit. **Trigger**: someone is prepared to answer who publishes the canonical record and who may edit it.
 
 ---

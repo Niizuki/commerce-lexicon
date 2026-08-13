@@ -13,7 +13,7 @@
           "structure": {
             "type": "ref",
             "ref": "app.temp.commerce.defs#listingStructure",
-            "description": "Structural dimension. Absent means 'simple'."
+            "description": "Structural dimension. Absent means 'simple'. 'variant' requires partOf; 'grouped' requires groupedItems."
           },
           "fulfillmentKind": {
             "type": "ref",
@@ -34,6 +34,11 @@
             "type": "string",
             "maxLength": 3000,
             "description": "Inherited from the productGroup when absent and partOf is set."
+          },
+          "shortDescription": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "One-line summary for cards and feeds. Without it every application truncates the long description differently."
           },
           "price": {
             "type": "ref",
@@ -131,16 +136,43 @@
               "ref": "app.temp.commerce.defs#variantProperty"
             },
             "maxLength": 10,
-            "description": "Concrete variant property tuple (e.g. [{axis: Color, value: Red}, {axis: Size, value: M}])"
+            "description": "Concrete variant property tuple (e.g. [{axis: Color, value: Red}, {axis: Size, value: M}]). A property with no value spans every value on that axis."
+          },
+          "groupedItems": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "app.temp.commerce.defs#groupedItem"
+            },
+            "maxLength": 100,
+            "description": "The listings this one bundles together. Present exactly when structure is 'grouped'. The grouped listing publishes its own price: per-item discount overrides are deliberately absent, because two applications totalling prices held in other records can disagree and both be right."
+          },
+          "location": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#location",
+            "description": "Where this item is, when it differs from the shop's location — a pickup-only sofa in a shop that otherwise ships. Absent means fall back to the shop's location. This is an intrinsic fact about the item; delivery methods and destinations belong to app.temp.commerce.fulfillmentProfile."
           },
           "details": {
             "type": "union",
             "refs": ["#serviceDetails", "#digitalDetails"],
             "description": "Intrinsic facts specific to a fulfillment kind. Physical properties are first-class fields, not a union member."
           },
+          "catalogVisibility": {
+            "type": "string",
+            "knownValues": ["visible", "catalog", "search", "hidden"],
+            "description": "Where the listing should surface: 'visible' in both browse and search, 'catalog' in browse only, 'search' in search only, 'hidden' in neither while staying reachable by direct link. Open/advisory knownValues. Distinct from hideFromFriends, which is social privacy rather than catalogue placement."
+          },
           "hideFromFriends": {
             "type": "boolean",
-            "description": "Social privacy: hide this listing from friends/followers"
+            "description": "Social privacy: hide this listing from friends/followers. Distinct from catalogVisibility, which controls browse and search placement."
+          },
+          "soldIndividually": {
+            "type": "boolean",
+            "description": "The seller asks that no more than one be bought per order. Advisory: checkout is outside this protocol, so nothing here can enforce a basket rule."
+          },
+          "reviewsAllowed": {
+            "type": "boolean",
+            "description": "False if the seller does not want reviews. Advisory, and weaker than it looks: reviews are buyer-owned records in the buyer's own repo, so no field here can prevent one from existing. It is a request to applications, not enforcement."
           },
           "labels": {
             "type": "union",
@@ -166,6 +198,11 @@
           "type": "string",
           "format": "uri",
           "maxLength": 2000
+        },
+        "buttonText": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Label for the call to action, so it reads 'Buy on Etsy' rather than something generic. Naming the destination is what keeps an external purchase from feeling like a dead end."
         }
       }
     },
@@ -178,6 +215,11 @@
           "type": "string",
           "format": "uri",
           "maxLength": 2000
+        },
+        "buttonText": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Label for the call to action"
         }
       }
     },
@@ -199,17 +241,33 @@
     },
     "digitalDetails": {
       "type": "object",
-      "description": "Intrinsic fields for digital goods",
+      "description": "Terms of sale for a digital good — what the buyer needs to know before buying, which is why they sit on the public listing rather than in a transaction system. Usage rights (commercial use, seats, territory) are a licensing question, not a delivery one, and are deliberately absent.",
       "properties": {
-        "fileFormat": {
-          "type": "string",
-          "maxLength": 50,
-          "description": "File format or type (e.g. PDF, PNG, ZIP)"
+        "fileFormats": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 50 },
+          "maxLength": 20,
+          "description": "File formats delivered (e.g. PNG, SVG, AI). An array because an asset pack is several at once."
+        },
+        "fileSize": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total download size in bytes"
+        },
+        "downloadLimit": {
+          "type": "integer",
+          "minimum": -1,
+          "description": "How many times the buyer may download. -1 means unlimited."
+        },
+        "downloadExpiryDays": {
+          "type": "integer",
+          "minimum": -1,
+          "description": "Days after purchase that the download stays available. -1 means it never expires."
         },
         "deliveryMethod": {
           "type": "string",
           "maxLength": 200,
-          "description": "How the digital good is delivered"
+          "description": "How the digital good is delivered. No file URL: this record is public, and publishing the location gives the product away."
         }
       }
     }

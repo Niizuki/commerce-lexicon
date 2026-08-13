@@ -1,5 +1,5 @@
 { "$type": "app.temp.commerce.listing", "fulfillmentKind": "service", "title": "Mismatched details",
   "category": "hobbies", "price": { "amount": 2500, "currency": "USD" },
   "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
-  "details": { "$type": "app.temp.commerce.listing#digitalDetails", "fileFormat": "PDF" },
+  "details": { "$type": "app.temp.commerce.listing#digitalDetails", "fileFormats": ["PDF"] },
   "createdAt": "2026-06-13T10:00:00Z" }

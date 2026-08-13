@@ -17,13 +17,18 @@
           },
           "availability": {
             "type": "string",
-            "knownValues": ["in_stock", "out_of_stock", "pre_order", "discontinued"],
-            "description": "Availability status. Open/advisory knownValues; richer states (backorder, per-location) are additive."
+            "knownValues": ["in_stock", "out_of_stock", "pre_order", "backorder", "discontinued"],
+            "description": "Availability status. 'pre_order' is not yet released and ships on a known date; 'backorder' is out of stock, still orderable, and ships when restocked — different promises to the buyer, so they are different states. Open/advisory knownValues; richer states (per-location, made-to-order) are additive."
           },
           "quantity": {
             "type": "integer",
             "minimum": 0,
             "description": "Units available, if the seller tracks a count"
+          },
+          "lowStockThreshold": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Quantity at or below which the seller considers stock low. Drives 'only 2 left' messaging, and belongs with the quantity it qualifies."
           },
           "managed": {
             "type": "boolean",

@@ -23,6 +23,11 @@
             "format": "at-uri",
             "description": "AT URI of the parent shop record"
           },
+          "defaultVariant": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the variant listing a product page should open on. Must be a listing whose partOf is this group; one belonging to another group renders as a confusing page rather than an obvious failure."
+          },
           "optionAxes": {
             "type": "array",
             "items": {
