@@ -82,6 +82,8 @@ Fixtures are converted with `jsonToLex` before validation, exactly as records ar
 - **A new constraint you want proven**: add a record to `test/invalid/` plus the expected message substring in its manifest. Matching on the message, not merely on failure, keeps the fixture from passing later for an unrelated reason.
 - **A new app-level invariant**: implement it in `scripts/checks/invariants.js`, document it in the README list and the table above, then add a record to `test/invalid-corpus/` and its code to `expectViolations`. Phase 8 fails if a check never fires, and equally if one fires on a record that was supposed to be clean.
 
+For what a change is *allowed* to be in the first place — free, two-part, or breaking — and for the checklist that covers all of the above, see [evolution.md](evolution.md).
+
 ## What is not checked
 
 - **Record key conventions.** Inventory records should reuse their subject listing's rkey (idempotent stock writes), but this is a documented recommendation, not a machine-checked rule.

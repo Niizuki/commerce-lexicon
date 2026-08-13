@@ -84,6 +84,7 @@ Fixtures are addressed by `test/fixtures/manifest.json` and converted with `json
 ## Documentation
 
 - [docs/boundaries.md](docs/boundaries.md) — why each boundary exists, what was deliberately deferred, and the full reasoning behind the variant inheritance decision.
+- [docs/evolution.md](docs/evolution.md) — what may change and what it costs: the four validator tolerances additive evolution rests on, the change taxonomy, how to withdraw a field, and what implementing apps must tolerate for any of it to hold.
 - [docs/validation.md](docs/validation.md) — what the validator checks, why each phase exists, and how to add fixtures and invariants.
 - [docs/next-implementation.md](docs/next-implementation.md) — the catalogue-completeness brief: thirteen gaps from auadix's field-level review, plus the named seams. Implemented; see §17 and §18 of boundaries.md.
 - `docs/internal/` — local working notes (including the original synthesis brief). Untracked by design.
@@ -92,9 +93,9 @@ Fixtures are addressed by `test/fixtures/manifest.json` and converted with `json
 
 Draft — not yet proposed to `lexicon-community`. Open questions:
 
-- **Schema evolution strategy** — document how fields are added without breaking existing apps. The largest remaining gap: the additive claim is tested per-record by phase 6, but the rules a contributor should follow are nowhere written down.
 - **Attestations** — `review.verified` has been removed. A generic `Attestation { issuer, subject, claim }` record is the intended direction whenever a real issuer (logistics receipt, marketplace confirmation) exists, and needs no change to `review` when it lands.
 - **Promotion mechanisms beyond `salePrice`** — percentage, fixed, buy-X-get-Y, free shipping, and bundle discounts are additive members of the existing union.
 - **Seller rating dimensions** — communication, shipping speed, item as described, as separate scores. Shop-level reviews make them possible; they are additive on top and need no change to `review.subject`.
 - **Taxonomy promotion target** — `#taxonomyTarget` (discount everything under a GPC branch) is the last target kind still unbuilt, and is now what the forward-compatibility corpus uses to prove the union stays open.
 - **Collection ordering and nesting** — `items[]` is an ordered flat list. Collections of collections, and pagination for very large ones, are unaddressed.
+- **The `lexicon-community` migration** — the one change ahead that is breaking by construction. [docs/evolution.md](docs/evolution.md#namespace-migration) sets out why it should happen before adoption rather than after, but the move itself has not been made.
