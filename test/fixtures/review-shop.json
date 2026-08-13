@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.review", "subject": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "rating": 4, "title": "Careful packing", "body": "Arrived quickly and well wrapped.",
+  "images": [ { "$type": "blob", "ref": { "$link": "bafkreibme22gw2h7y2h7tg2fhqotaqjucnbc24deqo72b6mkl2egezxhvy" },
+               "mimeType": "image/jpeg", "size": 91200 } ],
+  "createdAt": "2026-06-20T10:00:00Z" }

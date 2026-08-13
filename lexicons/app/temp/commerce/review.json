@@ -13,7 +13,7 @@
           "subject": {
             "type": "string",
             "format": "at-uri",
-            "description": "AT URI of the productGroup or standalone listing being reviewed (durable, product-level anchor)"
+            "description": "AT URI of what is being reviewed: a productGroup or standalone listing (a durable, product-level anchor), or a shop. Shop-level reviews are what make seller reputation portable and keep it from vanishing when a seller relists."
           },
           "rating": {
             "type": "integer",
@@ -35,7 +35,17 @@
               "ref": "app.temp.commerce.defs#variantProperty"
             },
             "maxLength": 10,
-            "description": "Denormalized variant properties captured at review time (e.g. [{axis: Color, value: Red}])"
+            "description": "Denormalized variant properties captured at review time (e.g. [{axis: Color, value: Red}]). Self-contained and not anchored to a live variant listing, so restructuring variants leaves reviews valid and filterable. Absent when the subject is a shop."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "blob",
+              "accept": ["image/*"],
+              "maxSize": 1000000
+            },
+            "maxLength": 10,
+            "description": "Buyer's own photographs of what arrived"
           },
           "createdAt": {
             "type": "string",

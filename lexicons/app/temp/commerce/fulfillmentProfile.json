@@ -1,0 +1,58 @@
+{
+  "lexicon": 1,
+  "id": "app.temp.commerce.fulfillmentProfile",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Where a seller ships and how soon they dispatch. Its own record rather than fields on the shop: shipping coverage changes with carrier contracts and seasons while a shop's name and logo do not, and putting the first two fields of a fulfillment system inside seller identity would oblige every later field — pickup locations, per-class handling, regional cutoffs — to follow them there. This record says where and how soon, never how much: rate tables, rate calculation, carrier selection, and label generation are out of scope and belong to a fulfillment system. A profile applies to the whole shop; when per-class coverage is needed, an appliesTo selector belongs on this record rather than a pointer on every listing.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the shop this profile belongs to"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Display name, e.g. 'EU express'. Several profiles per shop is the point of a tid key — a seller may reach the EU in two days and the rest of the world in ten — so they need distinguishing."
+          },
+          "handlingTime": {
+            "type": "ref",
+            "ref": "#handlingTime"
+          },
+          "coverage": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#regionScope",
+            "description": "Which destinations the seller serves. Destinations only — methods, rates, and routing are a fulfillment system's concern."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    },
+    "handlingTime": {
+      "type": "object",
+      "description": "Working days between an order and its dispatch. A dispatch promise, not a delivery estimate: time in transit depends on carrier and destination, which this schema does not model.",
+      "properties": {
+        "minDays": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxDays": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

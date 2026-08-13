@@ -1,0 +1,11 @@
+{ "$type": "app.temp.commerce.collection",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "title": "Summer picks", "description": "What we are carrying into July.",
+  "images": [ { "$type": "blob", "ref": { "$link": "bafkreibme22gw2h7y2h7tg2fhqotaqjucnbc24deqo72b6mkl2egezxhvy" },
+                "mimeType": "image/jpeg", "size": 152000 } ],
+  "items": [
+    "at://did:plc:seller/app.temp.commerce.productGroup/3ktee",
+    "at://did:plc:seller/app.temp.commerce.listing/3kmug",
+    "at://did:plc:seller/app.temp.commerce.listing/3ksounds"
+  ],
+  "createdAt": "2026-06-20T12:00:00Z", "updatedAt": "2026-06-25T08:00:00Z" }

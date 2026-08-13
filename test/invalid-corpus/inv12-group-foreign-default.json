@@ -1,0 +1,6 @@
+{ "$type": "app.temp.commerce.productGroup", "title": "Group whose default belongs elsewhere",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "optionAxes": [ {"name":"Color","values":["Red","Blue"]} ],
+  "category": "apparel", "fulfillmentKind": "physical",
+  "defaultVariant": "at://did:plc:seller/app.temp.commerce.listing/l2",
+  "createdAt": "2026-06-13T10:00:00Z" }

@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.listing", "structure": "grouped", "fulfillmentKind": "physical",
+  "title": "Grouped but says nothing about what", "category": "home_goods",
+  "price": { "amount": 5000, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "createdAt": "2026-06-13T10:00:00Z" }

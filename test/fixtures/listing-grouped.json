@@ -1,0 +1,14 @@
+{ "$type": "app.temp.commerce.listing", "structure": "grouped", "fulfillmentKind": "physical",
+  "title": "Desk Starter Bundle",
+  "shortDescription": "The camp mug and two tees, priced together.",
+  "price": { "amount": 6500, "currency": "USD" }, "category": "home_goods",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "groupedItems": [
+    { "item": "at://did:plc:seller/app.temp.commerce.listing/3kmug", "quantity": 1, "title": "Enamel Camp Mug" },
+    { "item": "at://did:plc:seller/app.temp.commerce.listing/3kteeredm", "quantity": 2, "title": "Classic Tee — Red / M" }
+  ],
+  "catalogVisibility": "visible",
+  "tax": { "status": "taxable", "priceIncludesTax": false },
+  "purchase": { "$type": "app.temp.commerce.listing#checkoutPurchase",
+                "url": "https://acme.example/checkout/desk-bundle", "buttonText": "Buy the bundle" },
+  "createdAt": "2026-06-14T10:00:00Z" }

@@ -1,4 +1,6 @@
 { "$type": "app.temp.commerce.shop", "name": "Acme Goods", "description": "Quality widgets",
-  "website": "https://acme.example",
+  "website": "https://acme.example", "defaultCurrency": "USD",
+  "banner": { "$type": "blob", "ref": { "$link": "bafkreibme22gw2h7y2h7tg2fhqotaqjucnbc24deqo72b6mkl2egezxhvy" },
+              "mimeType": "image/jpeg", "size": 204800 },
   "location": { "countryCode": "PT", "region": "Lisboa", "locality": "Lisbon", "postalPrefix": "1200", "isRemote": false },
   "createdAt": "2026-06-13T10:00:00Z" }

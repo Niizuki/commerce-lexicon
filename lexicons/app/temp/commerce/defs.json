@@ -8,7 +8,7 @@
       "properties": {
         "amount": {
           "type": "integer",
-          "description": "Price in minor currency units (e.g. cents). Zero indicates free."
+          "description": "Price in the currency's minor units. The exponent is per-currency from ISO 4217, not a fixed two digits: JPY has no minor unit (1000 is ¥1000) and KWD has three (1000 is 1.000 KWD). Code that divides by 100 unconditionally corrupts both. Zero indicates free."
         },
         "currency": {
           "type": "string",
@@ -48,9 +48,31 @@
         }
       }
     },
+    "regionScope": {
+      "type": "object",
+      "description": "A set of countries, expressed as an inclusion with exclusions subtracted. Shared because 'where a seller ships' and 'where a license grant applies' are the same shape drawn twice; defining it once keeps them from drifting apart.",
+      "properties": {
+        "worldwide": {
+          "type": "boolean",
+          "description": "True if the scope is everywhere, subject to excludedCountries"
+        },
+        "countries": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 2 },
+          "maxLength": 250,
+          "description": "ISO 3166-1 alpha-2 codes included in the scope. Redundant when worldwide is true."
+        },
+        "excludedCountries": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 2 },
+          "maxLength": 250,
+          "description": "ISO 3166-1 alpha-2 codes removed from the scope, subtracted from worldwide or from countries."
+        }
+      }
+    },
     "variantProperty": {
       "type": "object",
-      "required": ["axis", "value"],
+      "required": ["axis"],
       "properties": {
         "axis": {
           "type": "string",
@@ -60,7 +82,30 @@
         "value": {
           "type": "string",
           "maxLength": 200,
-          "description": "Selected value for this axis"
+          "description": "Selected value for this axis. Absent means the variant spans every value the group declares on this axis — 'Red, any size'. The axis must still be one the group declares."
+        }
+      }
+    },
+    "groupedItem": {
+      "type": "object",
+      "description": "One component of a grouped listing. Composition lives on the grouped listing rather than in a record of its own: it is authored as a unit and is meaningless without the group. The discount, if any, is a separate promotion mechanism.",
+      "required": ["item"],
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT URI of the component listing"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "How many of the component this group includes"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Component title, denormalized on the same reasoning as the review variant snapshot: the group still renders when a component is deleted or its server is unreachable."
         }
       }
     },
@@ -199,6 +244,10 @@
           "type": "ref",
           "ref": "app.temp.commerce.defs#vocabularyRef",
           "description": "Tax code within an external scheme, rather than an enum this schema assumes is globally sufficient"
+        },
+        "priceIncludesTax": {
+          "type": "boolean",
+          "description": "True if the listing's price already includes tax, false if tax is added at checkout. Absent means the seller has not stated it. A federated marketplace has no shared configuration to settle this, so the offer must carry it: otherwise a VAT-inclusive and a tax-exclusive seller write the identical record for different numbers. It sits here rather than on #price because #price is reused for promotion sale prices and later for shipping costs, which need not answer this."
         }
       }
     }

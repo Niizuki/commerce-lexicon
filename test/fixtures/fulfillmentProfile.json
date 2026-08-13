@@ -1,0 +1,6 @@
+{ "$type": "app.temp.commerce.fulfillmentProfile",
+  "subject": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "title": "EU express",
+  "handlingTime": { "minDays": 1, "maxDays": 2 },
+  "coverage": { "worldwide": false, "countries": ["PT", "ES", "FR", "DE"], "excludedCountries": ["RU"] },
+  "createdAt": "2026-06-14T10:00:00Z", "updatedAt": "2026-06-20T10:00:00Z" }

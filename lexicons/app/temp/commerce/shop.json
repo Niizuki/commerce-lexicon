@@ -22,6 +22,18 @@
             "accept": ["image/*"],
             "maxSize": 1000000
           },
+          "banner": {
+            "type": "blob",
+            "accept": ["image/*"],
+            "maxSize": 1000000,
+            "description": "Wide header image for the shop front"
+          },
+          "defaultCurrency": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3,
+            "description": "ISO 4217 code a client may prefill when composing a new listing, and may display for a shop that has no listings yet. Advisory only: a listing's own price.currency is authoritative and never resolves through the shop."
+          },
           "website": {
             "type": "string",
             "format": "uri",

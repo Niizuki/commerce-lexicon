@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.fulfillmentProfile",
+  "title": "Nobody's profile",
+  "coverage": { "worldwide": true },
+  "createdAt": "2026-06-14T10:00:00Z" }

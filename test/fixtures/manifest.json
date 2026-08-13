@@ -5,12 +5,19 @@
     "productGroup.json": "at://did:plc:seller/app.temp.commerce.productGroup/3ktee",
     "listing-variant.json": "at://did:plc:seller/app.temp.commerce.listing/3kteeredm",
     "listing-standalone-physical.json": "at://did:plc:seller/app.temp.commerce.listing/3kmug",
+    "listing-variant-any-size.json": "at://did:plc:seller/app.temp.commerce.listing/3kteeblue",
+    "listing-grouped.json": "at://did:plc:seller/app.temp.commerce.listing/3kbundle",
     "listing-service.json": "at://did:plc:seller/app.temp.commerce.listing/3kportrait",
     "listing-digital.json": "at://did:plc:seller/app.temp.commerce.listing/3ksounds",
     "inventory.json": "at://did:plc:seller/app.temp.commerce.inventory/3kteeredm",
+    "collection.json": "at://did:plc:seller/app.temp.commerce.collection/3ksummer",
+    "license.json": "at://did:plc:seller/app.temp.commerce.license/3krf",
     "promotion-sale.json": "at://did:plc:seller/app.temp.commerce.promotion/3ksummer",
+    "promotion-collection.json": "at://did:plc:seller/app.temp.commerce.promotion/3kpicks",
     "promotion-shopwide.json": "at://did:plc:seller/app.temp.commerce.promotion/3kclearance",
     "policy-returns.json": "at://did:plc:seller/app.temp.commerce.policy/3kreturns",
-    "review.json": "at://did:plc:buyer/app.temp.commerce.review/3kreview1"
+    "fulfillmentProfile.json": "at://did:plc:seller/app.temp.commerce.fulfillmentProfile/3keu",
+    "review.json": "at://did:plc:buyer/app.temp.commerce.review/3kreview1",
+    "review-shop.json": "at://did:plc:buyer/app.temp.commerce.review/3kreview2"
   }
 }

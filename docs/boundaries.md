@@ -1,6 +1,8 @@
 # Commerce Schema Boundaries — Implementation Record
 
-This records how the architectural brief in `Instructions.txt` was implemented, section by section, and what was deliberately left undone. It is the reference for *why* the schema is shaped this way; the README is the reference for *what* the schema is.
+This records how the original architectural brief was implemented, section by section, and what was deliberately left undone. It is the reference for *why* the schema is shaped this way; the README is the reference for *what* the schema is.
+
+The brief itself (`Instructions.txt`) has been retired now that it is fully implemented. Its sections survive here under the same numbering, so a reference to §13 means §13 of this document. The next round of work is specified separately in [next-implementation.md](next-implementation.md).
 
 The rule applied throughout: when a convenient special case in the core competed with a boundary that lets a subsystem evolve independently, the boundary won.
 
@@ -127,7 +129,73 @@ Near-term items 1–5: done. Medium-term items 6–8: done. Item 9 and the defer
 
 ## 16. Multi-level usability
 
-Unchanged and intended. `Shop` + `Listing` is a complete publication. `Inventory`, `Promotion`, `Policy` are additive. Large sellers reach external taxonomy, specification, fulfillment, and tax systems through reference fields rather than through core schema changes.
+Unchanged and intended. `Shop` + `Listing` is a complete publication. `Inventory`, `Promotion`, `Policy`, and now `FulfillmentProfile` are additive. Large sellers reach external taxonomy, specification, fulfillment, and tax systems through reference fields rather than through core schema changes.
+
+---
+
+## 17. Catalogue completeness (second round)
+
+The first round answered the *architectural* half of auadix's review of [discussion #4862](https://github.com/bluesky-social/atproto/discussions/4862#discussioncomment-17901346). The field-level half — could a real shop describe its full catalogue without losing anything? — was specified in [next-implementation.md](next-implementation.md) and implemented here. The boundary rule in §13 decided each item; what follows is where it landed and, for the inline cases, why extraction would have been fragmentation.
+
+**One new record.** `app.temp.commerce.fulfillmentProfile` (`subject` → shop, `handlingTime`, `coverage`). `handlingTime` and `shipsTo` were asked for *on the shop record*, and that is where they could not go: §8 names destinations and delivery promises as a fulfillment system's concern, and the first two fields of one, planted inside seller identity, would oblige pickup locations, per-class handling, and regional cutoffs to follow them there. Coverage also changes with carrier contracts and seasons while a shop's name and logo do not. The key is `tid`, not `self`, because several profiles per shop is the point — EU in two days, worldwide in ten. Rates, carrier selection, and label generation stay out: the record says where and how soon, never how much.
+
+**Eleven sets of inline fields**, each intrinsic to the record it sits on:
+
+| Item | Change | Why not a record |
+|---|---|---|
+| B1 | `listing.groupedItems[]` via `defs#groupedItem` | Composition is authored by the bundle and meaningless without it — no separate author, no multiple instances. It is already split along the axis that matters: composition here, discount as a promotion mechanism. |
+| B2 | `listing.location`, falling back to the shop's | Where the item *is* is intrinsic. Local pickup as a *method* is the fulfillment profile's. |
+| B3 | `taxInfo.priceIncludesTax`; ISO 4217 exponent wording on `price.amount` | One flag on the offer. Not on `#price`, which is reused for sale prices that need not answer it; no shop-level default, because the shop is not authoritative over an item's tax treatment. |
+| B4 | `#digitalDetails`: `fileFormats[]`, `fileSize`, `downloadLimit`, `downloadExpiryDays` | Terms the buyer needs *before* buying, so they belong on the public listing rather than in a transaction system. No file URL — the record is public, and publishing the location gives the product away. |
+| B5 | `backorder` availability; `inventory.lowStockThreshold` | Already the right record. `pre_order` and `backorder` are different promises — not yet released versus out of stock but still orderable — so they are different states. |
+| B6 | `defs#variantProperty.value` made optional | Absence spans the axis: "Red, any size, £20". |
+| B7 | `productGroup.defaultVariant` | A pointer within the group it already belongs to. |
+| B8 | `shortDescription`, `catalogVisibility`, `soldIndividually`, `reviewsAllowed` | Display and control facts about one listing. `catalogVisibility` is browse/search placement and `hideFromFriends` is social privacy; both descriptions name the other so the pair does not collapse. |
+| B9 | `buttonText` on `#externalPurchase` and `#checkoutPurchase` | A label on the mechanism that already exists. External purchase is Open Market's primary mode, and naming the destination is what keeps it from reading as a dead end. |
+| B10 | `review.subject` may be a shop; `review.images[]` | Reviews were already their own buyer-owned records; only the permitted anchor widened. |
+| B11 | `shop.banner`, `shop.defaultCurrency` | Presentation of the shop itself. |
+
+`ratingAverage` and `reviewCount` were **not** added, in either place they were tempting. A seller writing their own rating into their own record means nothing; §12 already forbids it, and INV10 now names both explicitly.
+
+`soldIndividually`, `reviewsAllowed`, and `defaultCurrency` are advisory, and their descriptions say so. `reviewsAllowed` is the one that most needs the wording: reviews live in the buyer's repo, so no seller field can prevent one existing. A field that reads as enforcement but isn't is worse than no field.
+
+**Two new invariants.** INV11 (a grouped listing says what it groups and does not group itself) and INV12 (a default variant belongs to its own group) — both are the kind of error that renders as a confusing page rather than an obvious failure. INV5 learned to skip value-membership for a value-less property while still checking the axis, and INV10 learned to read nested paths, which is how a withdrawn field inside a union member (`details.fileFormat`) is caught at all.
+
+**One maintenance trap, now documented.** Two forward-compatibility fixtures proved extensibility with values this round declared. `backorder` became a `knownValue`, so `unknown-availability.json` moved to `made_to_order`. Such a fixture keeps passing while testing nothing, and phase 6 cannot detect it — the swap belongs in the commit that declares the value. `test/forward-compat/manifest.json` now says so.
+
+---
+
+## 18. Collections and licenses
+
+Both of these were named seams rather than work items: `collection` was §A2 of the catalogue-completeness brief, marked optional because no reviewer asked for it, and `license` was a §D seam waiting on "the first request that is about permission rather than delivery". Both triggers have now been pulled.
+
+### `collection`
+
+Built to the brief's shape: `shopRef`, `title`, `description`, `images`, `items[]`, `tid` key.
+
+**Membership lives on the collection, not on its members.** A collection is authored as a unit, and putting membership here means reordering a shop front never rewrites the listings — the records with the most traffic and the most consumers. The cost is that adding one item rewrites the collection record, and that is acceptable for the same reason it was *not* acceptable for stock: collections are small and change rarely. This is the inventory argument (§4) run in reverse, and it is worth noticing that the boundary rule points in opposite directions for the two cases from the same premise about write frequency.
+
+`items[]` holds both listings and product groups. A collection of "everything in linen" naturally mixes a variant product with a one-off.
+
+**Members need not belong to the curator.** A curated set of other sellers' work is a legitimate thing to publish, so nothing forbids it. That opens an authority question the promotion system had to answer: a seller could otherwise publish a collection full of competitors' listings and a promotion over it. The answer needs no new machinery. INV8 already tests any target carrying a `ref`, so the *collection* must belong to the promoting DID; and `#collectionTarget` is documented, like `#shopTarget` before it, to reach only the issuer's own members. Foreign members are simply unaffected.
+
+`#collectionTarget` joins `promotion.targets`. `#taxonomyTarget` is now the undeclared member the forward-compatibility corpus uses — the swap the brief warned about, performed in the same commit that declared the old one.
+
+### `license`
+
+**A record, not fields on `#digitalDetails`.** The brief drew the line correctly: B4's fields describe the *transfer* — formats, size, download limits — and rights describe the *permission*. Two independent arguments then put rights in their own record. One license normally covers a seller's entire catalogue, so inline terms would be a single fact copied across hundreds of listings with no authoritative home — §13's "relationship rather than intrinsic property". And rights are historical: a purchase made under earlier terms still needs to name those terms, which is exactly the argument that extracted `policy` in §5. Superseded licenses are retained with `effectiveUntil` set.
+
+Shape: `subject` → shop, `name`, `identifier` (a `vocabularyRef`, so SPDX and Creative Commons identifiers work as first-class), `content` / `url`, `grants`, `seats`, `territory`, `drm`, and the policy-style effective period. `listing.license` and `productGroup.license` reference it, and it inherits like the other product-level fields.
+
+There is exactly **one** way to name a license — the reference. A standard license such as CC BY 4.0 still needs a record, which the seller publishes once and reuses; the alternative, allowing an inline `vocabularyRef` *and* a reference, would have been two mechanisms for one fact.
+
+`grants` is deliberately coarse and explicitly advisory: five booleans that let applications filter and badge without parsing prose, over a text or identifier that stays authoritative. `seats` counts users, devices, and end products, with `-1` for unlimited, matching the sentinel B4 established for `downloadLimit`. INV13 requires that a license state its terms *somewhere* — `content`, `url`, or `identifier` — because a license record granting nothing readable is worse than none.
+
+Not attempted, and worth stating: enforcement. Nothing here counts seats, checks territory, or applies DRM. The record says what was granted; whether anyone honours it is outside a public protocol, on the same footing as promotions being advertised rather than enforced (§3).
+
+### `defs#regionScope`
+
+`license.territory` and `fulfillmentProfile.coverage` are the same shape — an inclusion with exclusions subtracted — so the shape moved to `defs#regionScope` and `fulfillmentProfile#coverage` was withdrawn. Same reasoning as hoisting the category vocabulary to `defs#categorySlug`: two copies of a shape drift apart, and the drift is invisible until someone writes a record against the wrong one.
 
 ---
 
@@ -149,6 +217,21 @@ The rejected alternative was the previous rule: keep `title`, `category`, and `t
 
 The cost is real and is accepted: `title`, `category`, and `fulfillmentKind` can no longer be schema-required, because Lexicon cannot express "required unless `partOf` is set". They move to the app-level invariant list in the README, alongside the invariants the schema already could not enforce.
 
+### Revisited: the `"parent"` sentinel (brief item C1)
+
+The review proposed a literal `"parent"` sentinel on inheritable fields, giving three states rather than two: a real value overrides, `"parent"` inherits, missing means not set. It noted that platforms with variant products have used exactly this for years, on title, sku, stock, weight, dimensions, tax class, shipping class, and image.
+
+The gap it identifies is real. Absence-means-inherit collapses the last two states, so a variant cannot say "deliberately no images" as distinct from "take the group's images".
+
+**Decision: keep absence-means-inherit.** Two objections the proposal does not answer:
+
+1. **It does not work for the non-scalar fields.** `images` is a blob array; `classifications` and `specifications` are object arrays. The cited prior art applies `parent` to scalars. A sentinel covering five of our eight inheritable fields, with a second mechanism for the other three, is worse than one rule that covers all eight.
+2. **It collides with the value space.** A listing legitimately titled "parent" becomes ambiguous. Rare, and silent when it happens — the worst combination.
+
+If the missing state turns out to matter in practice, the cheaper fix is an explicit `suppressInherited: ["images"]` array on the variant: uniform across scalars and arrays, and incapable of colliding with a value. It is additive, so nothing here has to change first.
+
+This gates nothing else, but it needed settling and writing down before more implementations depend on the semantics — two incompatible readings of an inheritance rule is exactly how a schema acquires a permanent ambiguity.
+
 ---
 
 ## Not implemented, and why
@@ -157,4 +240,12 @@ The cost is real and is accepted: `title`, `category`, and `fulfillmentKind` can
 
 **Deferred by the brief (items 10–15).** Full promotion engine, checkout enforcement, fulfillment and rate calculation, tax calculation, inventory reservations, canonical federated product catalog. Each has a seam in place: an open mechanism union, a purchase-mechanism union, `shipping` classification, `taxInfo`, an inventory record that can grow location and reservation fields, and product identifiers.
 
-**Collection and taxonomy promotion targets.** Named in the brief as eventual. `targets` is a union, so they are additive members; there is no `collection` concept in the schema yet to point at.
+**Taxonomy promotion target.** `#taxonomyTarget` — discount everything under a GPC branch — is the last target kind still unbuilt. `targets` is a union, so it is an additive member, and it is now the undeclared value the forward-compatibility corpus uses to prove that. **Trigger**: a seller who prices by classification rather than by hand-picked set.
+
+**Seller rating dimensions.** Communication, shipping speed, item as described, as separate scores. Shop-level reviews had to exist first, and now do. **Trigger**: an application that wants to render them.
+
+**Collection ordering and nesting.** `items[]` is a flat ordered list, capped at 1000. Collections containing collections, and pagination beyond that cap, are unaddressed. **Trigger**: a catalogue that outgrows a single record.
+
+**License enforcement.** `license` records what was granted. Counting seats, checking territory, and applying DRM belong to systems that can actually observe use — the same boundary that keeps promotions advertised rather than enforced.
+
+*(`collection` and `license` themselves were listed here until their triggers were met; see §18.)*

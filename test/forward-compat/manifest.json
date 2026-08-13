@@ -1,10 +1,10 @@
 {
-  "description": "Records that use extensions this schema does not declare, and which MUST still validate. The README claims that unknown category slugs stay protocol-valid and that new promotion mechanisms and targets arrive as additive union members; those claims are load-bearing for the whole boundary design, so they are tested rather than asserted. Phase 6 relaxes the 'declared union members only' rule that phase 3 applies to our own fixtures, because tolerating undeclared members is precisely what is under test here.",
+  "description": "Records that use extensions this schema does not declare, and which MUST still validate. The README claims that unknown category slugs stay protocol-valid and that new promotion mechanisms and targets arrive as additive union members; those claims are load-bearing for the whole boundary design, so they are tested rather than asserted. Phase 6 relaxes the 'declared union members only' rule that phase 3 applies to our own fixtures, because tolerating undeclared members is precisely what is under test here. Each fixture must use a value the schema still does not declare: when a round of work declares one — 'backorder' became a knownValue, so this corpus moved to 'made_to_order' — the fixture stops testing anything while continuing to pass, and phase 6 cannot detect that. Swapping the value is part of the commit that declares it.",
   "expectAccepted": {
     "unknown-category-slug.json": "an app-registered category outside the 21 advisory slugs",
     "unknown-fulfillment-kind.json": "a delivery kind beyond physical/digital/service",
     "unknown-promotion-mechanism.json": "a percentage-discount mechanism added without a schema change",
-    "unknown-promotion-target.json": "a collection target added without a schema change",
-    "unknown-availability.json": "a backorder state added without a schema change"
+    "unknown-promotion-target.json": "a taxonomy target added without a schema change",
+    "unknown-availability.json": "a made-to-order state added without a schema change"
   }
 }

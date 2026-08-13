@@ -1,0 +1,5 @@
+{ "$type": "app.temp.commerce.fulfillmentProfile",
+  "subject": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "title": "Three-letter codes",
+  "coverage": { "worldwide": false, "countries": ["PRT"] },
+  "createdAt": "2026-06-14T10:00:00Z" }

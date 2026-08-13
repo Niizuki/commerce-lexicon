@@ -2,6 +2,7 @@
   "description": "Heavyweight cotton tee.",
   "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
   "optionAxes": [ {"name":"Color","values":["Red","Blue"]}, {"name":"Size","values":["S","M","L"]} ],
+  "defaultVariant": "at://did:plc:seller/app.temp.commerce.listing/3kteeredm",
   "category": "apparel", "fulfillmentKind": "physical", "brand": "Acme",
   "classifications": [ { "scheme": "https://www.gs1.org/gpc", "identifier": "10001184", "version": "2025-06" } ],
   "specifications": [ { "property": { "scheme": "https://schema.org", "identifier": "material" }, "value": "cotton" } ],

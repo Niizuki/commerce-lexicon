@@ -1,5 +1,5 @@
 {
-  "description": "A corpus built to violate each app-level invariant exactly once. Phase 7 runs the invariant checks over it and asserts the exact multiset of codes that fire — so a check that quietly stops working, or one that starts firing on innocent records, fails the build. shop.json and productGroup.json are clean anchors: without them, reference checks would fire everywhere and drown the signal.",
+  "description": "A corpus built to violate each app-level invariant, once per independent branch of the check — INV10 twice because a withdrawn field can sit at the top level or nested inside a union member, INV11 twice because a grouped listing can fail by saying nothing about what it groups or by grouping itself. Phase 7 runs the invariant checks over it and asserts the exact multiset of codes that fire — so a check that quietly stops working, or one that starts firing on innocent records, fails the build. shop.json and productGroup.json are clean anchors: without them, reference checks would fire everywhere and drown the signal.",
   "records": {
     "shop.json": "at://did:plc:seller/app.temp.commerce.shop/self",
     "productGroup.json": "at://did:plc:seller/app.temp.commerce.productGroup/g1",
@@ -13,7 +13,12 @@
     "inv7-inventory-b.json": "at://did:plc:seller/app.temp.commerce.inventory/i3",
     "inv8-foreign-promotion.json": "at://did:plc:other/app.temp.commerce.promotion/p1",
     "inv9-policy-empty.json": "at://did:plc:seller/app.temp.commerce.policy/pol1",
-    "inv10-listing-with-availability.json": "at://did:plc:seller/app.temp.commerce.listing/l6"
+    "inv10-listing-with-availability.json": "at://did:plc:seller/app.temp.commerce.listing/l6",
+    "inv10b-digital-with-file-format.json": "at://did:plc:seller/app.temp.commerce.listing/l7",
+    "inv11a-grouped-without-items.json": "at://did:plc:seller/app.temp.commerce.listing/l8",
+    "inv11b-grouped-includes-itself.json": "at://did:plc:seller/app.temp.commerce.listing/l9",
+    "inv12-group-foreign-default.json": "at://did:plc:seller/app.temp.commerce.productGroup/g2",
+    "inv13-license-empty.json": "at://did:plc:seller/app.temp.commerce.license/lic1"
   },
-  "expectViolations": ["INV1", "INV2", "INV3", "INV4", "INV5", "INV6", "INV7", "INV8", "INV9", "INV10"]
+  "expectViolations": ["INV1", "INV2", "INV3", "INV4", "INV5", "INV6", "INV7", "INV8", "INV9", "INV10", "INV10", "INV11", "INV11", "INV12", "INV13"]
 }

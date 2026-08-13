@@ -1,0 +1,8 @@
+{ "$type": "app.temp.commerce.promotion", "title": "Summer picks, ten percent off",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "targets": [ { "$type": "app.temp.commerce.promotion#collectionTarget",
+                 "ref": "at://did:plc:seller/app.temp.commerce.collection/3ksummer" } ],
+  "mechanism": { "$type": "app.temp.commerce.promotion#salePrice",
+                 "price": { "amount": 1620, "currency": "USD" } },
+  "startsAt": "2026-07-01T00:00:00Z", "endsAt": "2026-07-31T23:59:59Z",
+  "createdAt": "2026-06-25T12:00:00Z" }

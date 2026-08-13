@@ -1,0 +1,8 @@
+{ "$type": "app.temp.commerce.listing", "structure": "grouped", "fulfillmentKind": "physical",
+  "title": "Bundle of nothing", "category": "home_goods",
+  "price": { "amount": 6500, "currency": "USD" },
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "groupedItems": [
+    { "item": "at://did:plc:seller/app.temp.commerce.listing/3kmug", "quantity": 0 }
+  ],
+  "createdAt": "2026-06-14T10:00:00Z" }

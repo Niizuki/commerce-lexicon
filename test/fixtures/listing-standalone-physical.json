@@ -1,5 +1,8 @@
 { "$type": "app.temp.commerce.listing", "structure": "simple", "fulfillmentKind": "physical",
   "title": "Enamel Camp Mug", "description": "Speckled enamel over steel. 350 ml.",
+  "shortDescription": "Speckled enamel camp mug, 350 ml.",
+  "catalogVisibility": "visible", "soldIndividually": false, "reviewsAllowed": true,
+  "location": { "countryCode": "PT", "locality": "Porto", "isRemote": false },
   "price": { "amount": 1800, "currency": "USD" }, "category": "home_goods",
   "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
   "condition": "new", "brand": "Acme", "sku": "MUG-ENAMEL", "tags": ["camping", "enamel"],
@@ -11,7 +14,7 @@
                 "mimeType": "image/jpeg", "size": 128400 } ],
   "physical": { "lengthMm": 120, "widthMm": 90, "heightMm": 95, "weightGrams": 310 },
   "shipping": { "required": true, "class": { "scheme": "https://acme.example/shipping", "identifier": "parcel-small" } },
-  "tax": { "status": "taxable", "classification": { "scheme": "https://ec.europa.eu/taxation_customs/tedb", "identifier": "STD" } },
-  "purchase": { "$type": "app.temp.commerce.listing#externalPurchase", "url": "https://acme.example/mug" },
+  "tax": { "status": "taxable", "priceIncludesTax": true, "classification": { "scheme": "https://ec.europa.eu/taxation_customs/tedb", "identifier": "STD" } },
+  "purchase": { "$type": "app.temp.commerce.listing#externalPurchase", "url": "https://acme.example/mug", "buttonText": "Buy on Acme" },
   "labels": { "$type": "com.atproto.label.defs#selfLabels", "values": [{ "val": "handmade" }] },
   "createdAt": "2026-06-13T10:00:00Z" }
