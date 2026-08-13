@@ -1,6 +1,7 @@
 { "$type": "app.temp.commerce.listing", "fulfillmentKind": "digital",
   "title": "Field Recording Pack Vol. 1", "price": { "amount": 900, "currency": "USD" },
   "category": "musical", "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "license": "at://did:plc:seller/app.temp.commerce.license/3krf",
   "shipping": { "required": false }, "tax": { "status": "taxable", "priceIncludesTax": false },
   "details": { "$type": "app.temp.commerce.listing#digitalDetails",
                "fileFormats": ["WAV", "FLAC"], "fileSize": 734003200,

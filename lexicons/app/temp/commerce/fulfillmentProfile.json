@@ -26,7 +26,8 @@
           },
           "coverage": {
             "type": "ref",
-            "ref": "#coverage"
+            "ref": "app.temp.commerce.defs#regionScope",
+            "description": "Which destinations the seller serves. Destinations only — methods, rates, and routing are a fulfillment system's concern."
           },
           "createdAt": {
             "type": "string",
@@ -50,28 +51,6 @@
         "maxDays": {
           "type": "integer",
           "minimum": 0
-        }
-      }
-    },
-    "coverage": {
-      "type": "object",
-      "description": "Which destinations the seller serves. Destinations only — methods, rates, and routing are a fulfillment system's concern.",
-      "properties": {
-        "worldwide": {
-          "type": "boolean",
-          "description": "True if the seller ships anywhere, subject to excludedCountries"
-        },
-        "countries": {
-          "type": "array",
-          "items": { "type": "string", "minLength": 2, "maxLength": 2 },
-          "maxLength": 250,
-          "description": "ISO 3166-1 alpha-2 codes the seller ships to. Redundant when worldwide is true."
-        },
-        "excludedCountries": {
-          "type": "array",
-          "items": { "type": "string", "minLength": 2, "maxLength": 2 },
-          "maxLength": 250,
-          "description": "ISO 3166-1 alpha-2 codes the seller will not ship to, subtracted from worldwide or from countries."
         }
       }
     }

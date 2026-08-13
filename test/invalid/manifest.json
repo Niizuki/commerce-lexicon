@@ -10,6 +10,9 @@
     "listing-grouped-quantity-zero.json": "Record/groupedItems/0/quantity can not be less than 1",
     "fulfillment-profile-missing-subject.json": "Record must have the property \"subject\"",
     "shop-short-default-currency.json": "Record/defaultCurrency must not be shorter than 3 characters",
+    "collection-missing-title.json": "Record must have the property \"title\"",
+    "license-seats-below-sentinel.json": "Record/seats/users can not be less than -1",
+    "fulfillment-profile-bad-country.json": "Record/coverage/countries/0 must not be longer than 2 characters",
     "promotion-empty-targets.json": "Record/targets must not have fewer than 1 elements",
     "review-rating-out-of-range.json": "Record/rating can not be greater than 5"
   }

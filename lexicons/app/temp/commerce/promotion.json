@@ -24,7 +24,7 @@
             "type": "array",
             "items": {
               "type": "union",
-              "refs": ["#listingTarget", "#productGroupTarget", "#shopTarget"]
+              "refs": ["#listingTarget", "#productGroupTarget", "#collectionTarget", "#shopTarget"]
             },
             "minLength": 1,
             "maxLength": 100,
@@ -73,6 +73,18 @@
           "type": "string",
           "format": "at-uri",
           "description": "AT URI of an app.temp.commerce.productGroup record"
+        }
+      }
+    },
+    "collectionTarget": {
+      "type": "object",
+      "description": "Targets the members of a curated collection. Like #shopTarget, it reaches only the issuing seller's own records: a collection may include other sellers' listings, and a promotion never binds those.",
+      "required": ["ref"],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT URI of an app.temp.commerce.collection record"
         }
       }
     },

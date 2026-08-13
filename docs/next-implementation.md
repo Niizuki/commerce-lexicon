@@ -1,12 +1,17 @@
 # Catalogue Completeness — Implementation Brief
 
-> IMPLEMENTED, except A2. §A1 (`fulfillmentProfile`), all eleven items of §B, and the
-> §C1 decision have landed in the schema. §A2 (`collection`) was skipped, as this brief
-> permits — it is the only item here no reviewer asked for. The §D seams remain unbuilt
-> and their triggers unmet.
+> IMPLEMENTED. §A1 (`fulfillmentProfile`), §A2 (`collection`), all eleven items of §B, and
+> the §C1 decision have landed in the schema. A2 was skipped on the first pass, as this brief
+> permits, and built once someone wanted a curated set — with `#collectionTarget` and the
+> forward-compatibility swap it calls for.
 >
-> See [boundaries.md](boundaries.md) §17 for what was built for each item, the reasoning,
-> and what was deliberately left undone. This is now a record of intent, not an open work list.
+> Of the §D seams, `license` has been built: its trigger — a request about permission rather
+> than delivery — was met. `attestation`, seller rating dimensions, and `catalog` remain
+> unbuilt with their triggers unmet.
+>
+> See [boundaries.md](boundaries.md) §17 and §18 for what was built for each item, the
+> reasoning, and what was deliberately left undone. This is now a record of intent, not an
+> open work list.
 
 ## Status
 

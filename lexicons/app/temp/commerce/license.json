@@ -1,0 +1,126 @@
+{
+  "lexicon": 1,
+  "id": "app.temp.commerce.license",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "The usage rights sold with a listing: what the buyer may do with the thing, as distinct from how they receive it. Delivery terms — formats, size, download limits — stay on listing#digitalDetails; those describe the transfer, these describe the permission. Its own record for two reasons. One license normally covers a whole catalogue, so restating it on every listing would make it a duplicated fact with no authoritative home. And rights are historical: a purchase made under an earlier version of the terms still needs to name that version, which is the same reason policies were extracted. Superseded licenses should be retained with effectiveUntil set rather than deleted. This is not a rights-enforcement system; it records what the seller granted.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "name", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the shop that grants this license"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Display name, e.g. 'Royalty-Free Standard' or 'CC BY 4.0'"
+          },
+          "identifier": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#vocabularyRef",
+            "description": "The license within an external, independently versioned scheme — an SPDX identifier, a Creative Commons URI. Naming a published license this way is what lets applications recognise it rather than parse prose, and it is why a standard license needs no content of its own."
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 20000,
+            "description": "Full license text, for terms the seller wrote themselves. At least one of content, url, or identifier should be present."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "Canonical location of the license, if it is hosted elsewhere"
+          },
+          "grants": {
+            "type": "ref",
+            "ref": "#grants",
+            "description": "Coarse, machine-readable summary of the permissions. Advisory: the license text or the named identifier is authoritative, and these booleans exist so applications can filter and badge without parsing prose."
+          },
+          "seats": {
+            "type": "ref",
+            "ref": "#seats"
+          },
+          "territory": {
+            "type": "ref",
+            "ref": "app.temp.commerce.defs#regionScope",
+            "description": "Where the grant applies. Absent means the license text decides."
+          },
+          "drm": {
+            "type": "boolean",
+            "description": "True if the delivered files carry technical restrictions such as watermarking or device binding. A disclosure to the buyer, not a mechanism."
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When these terms took effect. Absent means they apply from creation."
+          },
+          "effectiveUntil": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When these terms stopped applying to new purchases. Absent means current. A superseded license stays published so earlier purchases remain resolvable."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    },
+    "grants": {
+      "type": "object",
+      "description": "What the buyer is permitted to do. Absent fields are unstated rather than denied — read the license text.",
+      "properties": {
+        "commercialUse": {
+          "type": "boolean",
+          "description": "The buyer may use it in work they are paid for or that generates revenue"
+        },
+        "modification": {
+          "type": "boolean",
+          "description": "The buyer may alter, remix, or build derivative works"
+        },
+        "redistribution": {
+          "type": "boolean",
+          "description": "The buyer may distribute copies onward"
+        },
+        "resale": {
+          "type": "boolean",
+          "description": "The buyer may sell it on, as itself rather than as part of a derivative work"
+        },
+        "attributionRequired": {
+          "type": "boolean",
+          "description": "The buyer must credit the author"
+        }
+      }
+    },
+    "seats": {
+      "type": "object",
+      "description": "How far one purchase stretches. Counting is the application's business and this schema does not enforce it; absent means the license text decides.",
+      "properties": {
+        "users": {
+          "type": "integer",
+          "minimum": -1,
+          "description": "People who may use it under one purchase. -1 means unlimited."
+        },
+        "devices": {
+          "type": "integer",
+          "minimum": -1,
+          "description": "Devices it may be installed on. -1 means unlimited."
+        },
+        "endProducts": {
+          "type": "integer",
+          "minimum": -1,
+          "description": "Finished works it may be embedded in — the usual unit for fonts, stock assets, and templates. -1 means unlimited."
+        }
+      }
+    }
+  }
+}

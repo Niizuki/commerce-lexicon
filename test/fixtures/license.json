@@ -1,0 +1,12 @@
+{ "$type": "app.temp.commerce.license",
+  "subject": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "name": "Royalty-Free Standard",
+  "identifier": { "scheme": "https://spdx.org/licenses", "identifier": "LicenseRef-Acme-RF-Standard", "version": "2" },
+  "content": "You may use these recordings in your own productions, including paid work. You may not resell or redistribute the files themselves.",
+  "url": "https://acme.example/licenses/royalty-free-standard",
+  "grants": { "commercialUse": true, "modification": true, "redistribution": false, "resale": false, "attributionRequired": false },
+  "seats": { "users": 1, "devices": -1, "endProducts": -1 },
+  "territory": { "worldwide": true },
+  "drm": false,
+  "effectiveFrom": "2026-01-01T00:00:00Z",
+  "createdAt": "2025-12-20T09:00:00Z", "updatedAt": "2026-06-01T09:00:00Z" }

@@ -17,7 +17,8 @@
     "inv10b-digital-with-file-format.json": "at://did:plc:seller/app.temp.commerce.listing/l7",
     "inv11a-grouped-without-items.json": "at://did:plc:seller/app.temp.commerce.listing/l8",
     "inv11b-grouped-includes-itself.json": "at://did:plc:seller/app.temp.commerce.listing/l9",
-    "inv12-group-foreign-default.json": "at://did:plc:seller/app.temp.commerce.productGroup/g2"
+    "inv12-group-foreign-default.json": "at://did:plc:seller/app.temp.commerce.productGroup/g2",
+    "inv13-license-empty.json": "at://did:plc:seller/app.temp.commerce.license/lic1"
   },
-  "expectViolations": ["INV1", "INV2", "INV3", "INV4", "INV5", "INV6", "INV7", "INV8", "INV9", "INV10", "INV10", "INV11", "INV11", "INV12"]
+  "expectViolations": ["INV1", "INV2", "INV3", "INV4", "INV5", "INV6", "INV7", "INV8", "INV9", "INV10", "INV10", "INV11", "INV11", "INV12", "INV13"]
 }

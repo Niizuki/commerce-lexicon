@@ -165,6 +165,40 @@ The first round answered the *architectural* half of auadix's review of [discuss
 
 ---
 
+## 18. Collections and licenses
+
+Both of these were named seams rather than work items: `collection` was §A2 of the catalogue-completeness brief, marked optional because no reviewer asked for it, and `license` was a §D seam waiting on "the first request that is about permission rather than delivery". Both triggers have now been pulled.
+
+### `collection`
+
+Built to the brief's shape: `shopRef`, `title`, `description`, `images`, `items[]`, `tid` key.
+
+**Membership lives on the collection, not on its members.** A collection is authored as a unit, and putting membership here means reordering a shop front never rewrites the listings — the records with the most traffic and the most consumers. The cost is that adding one item rewrites the collection record, and that is acceptable for the same reason it was *not* acceptable for stock: collections are small and change rarely. This is the inventory argument (§4) run in reverse, and it is worth noticing that the boundary rule points in opposite directions for the two cases from the same premise about write frequency.
+
+`items[]` holds both listings and product groups. A collection of "everything in linen" naturally mixes a variant product with a one-off.
+
+**Members need not belong to the curator.** A curated set of other sellers' work is a legitimate thing to publish, so nothing forbids it. That opens an authority question the promotion system had to answer: a seller could otherwise publish a collection full of competitors' listings and a promotion over it. The answer needs no new machinery. INV8 already tests any target carrying a `ref`, so the *collection* must belong to the promoting DID; and `#collectionTarget` is documented, like `#shopTarget` before it, to reach only the issuer's own members. Foreign members are simply unaffected.
+
+`#collectionTarget` joins `promotion.targets`. `#taxonomyTarget` is now the undeclared member the forward-compatibility corpus uses — the swap the brief warned about, performed in the same commit that declared the old one.
+
+### `license`
+
+**A record, not fields on `#digitalDetails`.** The brief drew the line correctly: B4's fields describe the *transfer* — formats, size, download limits — and rights describe the *permission*. Two independent arguments then put rights in their own record. One license normally covers a seller's entire catalogue, so inline terms would be a single fact copied across hundreds of listings with no authoritative home — §13's "relationship rather than intrinsic property". And rights are historical: a purchase made under earlier terms still needs to name those terms, which is exactly the argument that extracted `policy` in §5. Superseded licenses are retained with `effectiveUntil` set.
+
+Shape: `subject` → shop, `name`, `identifier` (a `vocabularyRef`, so SPDX and Creative Commons identifiers work as first-class), `content` / `url`, `grants`, `seats`, `territory`, `drm`, and the policy-style effective period. `listing.license` and `productGroup.license` reference it, and it inherits like the other product-level fields.
+
+There is exactly **one** way to name a license — the reference. A standard license such as CC BY 4.0 still needs a record, which the seller publishes once and reuses; the alternative, allowing an inline `vocabularyRef` *and* a reference, would have been two mechanisms for one fact.
+
+`grants` is deliberately coarse and explicitly advisory: five booleans that let applications filter and badge without parsing prose, over a text or identifier that stays authoritative. `seats` counts users, devices, and end products, with `-1` for unlimited, matching the sentinel B4 established for `downloadLimit`. INV13 requires that a license state its terms *somewhere* — `content`, `url`, or `identifier` — because a license record granting nothing readable is worse than none.
+
+Not attempted, and worth stating: enforcement. Nothing here counts seats, checks territory, or applies DRM. The record says what was granted; whether anyone honours it is outside a public protocol, on the same footing as promotions being advertised rather than enforced (§3).
+
+### `defs#regionScope`
+
+`license.territory` and `fulfillmentProfile.coverage` are the same shape — an inclusion with exclusions subtracted — so the shape moved to `defs#regionScope` and `fulfillmentProfile#coverage` was withdrawn. Same reasoning as hoisting the category vocabulary to `defs#categorySlug`: two copies of a shape drift apart, and the drift is invisible until someone writes a record against the wrong one.
+
+---
+
 ## Inheritance semantics for grouped/variant listings (brief item 4)
 
 This was the one place the brief left genuinely open, and it is the decision most likely to be revisited, so the reasoning is recorded in full.
@@ -206,10 +240,12 @@ This gates nothing else, but it needed settling and writing down before more imp
 
 **Deferred by the brief (items 10–15).** Full promotion engine, checkout enforcement, fulfillment and rate calculation, tax calculation, inventory reservations, canonical federated product catalog. Each has a seam in place: an open mechanism union, a purchase-mechanism union, `shipping` classification, `taxInfo`, an inventory record that can grow location and reservation fields, and product identifiers.
 
-**Collection and taxonomy promotion targets.** Named in the brief as eventual. `targets` is a union, so they are additive members; there is no `collection` concept in the schema yet to point at.
-
-**`collection` (catalogue-completeness brief A2).** Specified there, and the only item in that brief no reviewer asked for — the brief itself marks it optional and says the rest is unaffected if it is skipped. It was skipped. Building a record so that an already-sketched promotion target has something to point at is the wrong order; the trigger is someone wanting a seller-curated set. The shape and the membership-direction argument (items listed on the collection, not declared by each listing) are recorded in the brief for whoever needs them.
-
-**`license` for digital goods.** Usage rights — commercial use, seats, territory, DRM — as distinct from the delivery terms B4 added. **Trigger**: the first request that is about permission rather than delivery.
+**Taxonomy promotion target.** `#taxonomyTarget` — discount everything under a GPC branch — is the last target kind still unbuilt. `targets` is a union, so it is an additive member, and it is now the undeclared value the forward-compatibility corpus uses to prove that. **Trigger**: a seller who prices by classification rather than by hand-picked set.
 
 **Seller rating dimensions.** Communication, shipping speed, item as described, as separate scores. Shop-level reviews had to exist first, and now do. **Trigger**: an application that wants to render them.
+
+**Collection ordering and nesting.** `items[]` is a flat ordered list, capped at 1000. Collections containing collections, and pagination beyond that cap, are unaddressed. **Trigger**: a catalogue that outgrows a single record.
+
+**License enforcement.** `license` records what was granted. Counting seats, checking territory, and applying DRM belong to systems that can actually observe use — the same boundary that keeps promotions advertised rather than enforced.
+
+*(`collection` and `license` themselves were listed here until their triggers were met; see §18.)*

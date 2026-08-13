@@ -23,6 +23,11 @@
             "format": "at-uri",
             "description": "AT URI of the parent shop record"
           },
+          "license": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the license granting usage rights for every variant in this group. Inherited by variant listings."
+          },
           "defaultVariant": {
             "type": "string",
             "format": "at-uri",

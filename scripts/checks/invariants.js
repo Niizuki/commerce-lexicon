@@ -15,8 +15,10 @@ const PROMOTION = 'app.temp.commerce.promotion';
 const POLICY = 'app.temp.commerce.policy';
 const REVIEW = 'app.temp.commerce.review';
 const FULFILLMENT_PROFILE = 'app.temp.commerce.fulfillmentProfile';
+const COLLECTION = 'app.temp.commerce.collection';
+const LICENSE = 'app.temp.commerce.license';
 
-const INHERITED = ['title', 'description', 'category', 'fulfillmentKind', 'classifications', 'specifications', 'brand', 'images'];
+const INHERITED = ['title', 'description', 'category', 'fulfillmentKind', 'classifications', 'specifications', 'brand', 'images', 'license'];
 const PRODUCT_LEVEL = ['title', 'category', 'fulfillmentKind'];
 
 const DETAILS_FOR_KIND = {
@@ -73,8 +75,12 @@ const WITHDRAWN_FIELDS = {
 const REFERENCE_TARGETS = [
   { nsid: LISTING, field: 'shopRef', allow: [SHOP] },
   { nsid: LISTING, field: 'partOf', allow: [PRODUCT_GROUP], skipExistence: true },
+  { nsid: LISTING, field: 'license', allow: [LICENSE] },
   { nsid: PRODUCT_GROUP, field: 'shopRef', allow: [SHOP] },
   { nsid: PRODUCT_GROUP, field: 'defaultVariant', allow: [LISTING] },
+  { nsid: PRODUCT_GROUP, field: 'license', allow: [LICENSE] },
+  { nsid: COLLECTION, field: 'shopRef', allow: [SHOP] },
+  { nsid: LICENSE, field: 'subject', allow: [SHOP] },
   { nsid: INVENTORY, field: 'subject', allow: [LISTING] },
   { nsid: POLICY, field: 'subject', allow: [SHOP] },
   { nsid: PROMOTION, field: 'shopRef', allow: [SHOP] },
@@ -183,11 +189,17 @@ export function checkInvariants(corpus) {
         checkReference(entry, item.item, { allow: [LISTING] }, `groupedItems/${i}/item`);
       });
     }
+    if (entry.nsid === COLLECTION) {
+      (entry.record.items ?? []).forEach((uri, i) => {
+        checkReference(entry, uri, { allow: [LISTING, PRODUCT_GROUP] }, `items/${i}`);
+      });
+    }
     if (entry.nsid === PROMOTION) {
       (entry.record.targets ?? []).forEach((target, i) => {
         const allow =
           target.$type === `${PROMOTION}#listingTarget` ? [LISTING]
           : target.$type === `${PROMOTION}#productGroupTarget` ? [PRODUCT_GROUP]
+          : target.$type === `${PROMOTION}#collectionTarget` ? [COLLECTION]
           : null;
         if (allow) checkReference(entry, target.ref, { allow }, `targets/${i}/ref`);
       });
@@ -280,6 +292,13 @@ export function checkInvariants(corpus) {
     if (listing?.nsid !== LISTING) continue; // a missing or mistyped target is INV6's report
     if (listing.record.partOf !== entry.uri) {
       report('INV12', entry, `defaultVariant ${target} has partOf ${listing.record.partOf ?? '(none)'}, so it is not a variant of this group`);
+    }
+  }
+
+  // INV13 — a license must state its terms somewhere.
+  for (const entry of of(LICENSE)) {
+    if (!entry.record.content && !entry.record.url && !entry.record.identifier) {
+      report('INV13', entry, `license has no content, url, or identifier, so nothing states the terms it grants`);
     }
   }
 

@@ -48,6 +48,28 @@
         }
       }
     },
+    "regionScope": {
+      "type": "object",
+      "description": "A set of countries, expressed as an inclusion with exclusions subtracted. Shared because 'where a seller ships' and 'where a license grant applies' are the same shape drawn twice; defining it once keeps them from drifting apart.",
+      "properties": {
+        "worldwide": {
+          "type": "boolean",
+          "description": "True if the scope is everywhere, subject to excludedCountries"
+        },
+        "countries": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 2 },
+          "maxLength": 250,
+          "description": "ISO 3166-1 alpha-2 codes included in the scope. Redundant when worldwide is true."
+        },
+        "excludedCountries": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 2 },
+          "maxLength": 250,
+          "description": "ISO 3166-1 alpha-2 codes removed from the scope, subtracted from worldwide or from countries."
+        }
+      }
+    },
     "variantProperty": {
       "type": "object",
       "required": ["axis"],

@@ -1,0 +1,54 @@
+{
+  "lexicon": 1,
+  "id": "app.temp.commerce.collection",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A seller-curated set of listings and product groups — a shop front section, a seasonal edit, a gift guide. Membership is listed here rather than declared by each member: a collection is authored as a unit, and keeping it on this record means reordering a shop front never rewrites the listings, which are the high-traffic records. The cost is that adding one item rewrites this record, which is acceptable precisely because collections are small and change rarely — the opposite of the inventory case that justified extracting stock.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["shopRef", "title", "createdAt"],
+        "properties": {
+          "shopRef": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the shop that curates this collection"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "blob",
+              "accept": ["image/*"],
+              "maxSize": 1000000
+            },
+            "maxLength": 10,
+            "description": "Artwork for the collection itself, not for its members"
+          },
+          "items": {
+            "type": "array",
+            "items": { "type": "string", "format": "at-uri" },
+            "maxLength": 1000,
+            "description": "AT URIs of the member listings and productGroups, in the order the seller wants them shown. Members need not all belong to the curating seller: a curated set of other sellers' listings is a legitimate use, which is why a promotion targeting this collection still only binds the promoting seller's own members."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

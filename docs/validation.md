@@ -16,12 +16,12 @@ Eight phases, all in `scripts/`. Any failure exits non-zero.
 | 4. Schema coverage | Every def in `app.temp.commerce.*` is exercised by some fixture | Schema that has quietly stopped being tested |
 | 5. Invalid fixtures | Each record in `test/invalid/` is rejected, *with the expected message* | A schema that has stopped constraining anything |
 | 6. Forward compatibility | Each record in `test/forward-compat/` is accepted despite using undeclared extensions | An accidental tightening that breaks additive evolution |
-| 7. App-level invariants | The twelve cross-record rules from the README, over the whole fixture corpus | Inconsistent records that are individually valid |
+| 7. App-level invariants | The thirteen cross-record rules from the README, over the whole fixture corpus | Inconsistent records that are individually valid |
 | 8. Invariant self-test | The invariant checks, run over a corpus built to violate each one, once per independent branch | An invariant check that silently stopped working |
 
 ## Why phase 6 exists
 
-The boundary design rests on a claim: unknown category slugs stay protocol-valid, and new promotion mechanisms and targets arrive as additive union members rather than as breaking changes. That claim is what makes it safe to ship a small core. It is verified, not assumed — phase 6 holds records with an unregistered category, an unknown `fulfillmentKind`, a `#percentageDiscount` mechanism, a `#collectionTarget`, and a `made_to_order` availability, and requires all of them to validate.
+The boundary design rests on a claim: unknown category slugs stay protocol-valid, and new promotion mechanisms and targets arrive as additive union members rather than as breaking changes. That claim is what makes it safe to ship a small core. It is verified, not assumed — phase 6 holds records with an unregistered category, an unknown `fulfillmentKind`, a `#percentageDiscount` mechanism, a `#taxonomyTarget`, and a `made_to_order` availability, and requires all of them to validate.
 
 Phase 3 rejects undeclared union members, because our *own* fixtures should only use declared ones. Phase 6 relaxes exactly that rule, since tolerating undeclared members is what it exists to test. Extension records use a separate coverage set, so they can never make phase 4 look satisfied.
 
@@ -29,7 +29,7 @@ Phase 3 rejects undeclared union members, because our *own* fixtures should only
 
 Each of these fixtures has to keep using a value the schema does **not** declare. When a round of work declares one, the fixture still validates — it just stops testing anything, because the extension it was built around is no longer an extension. Phase 6 cannot detect this: all it sees is that the record validates, which is exactly what it asked for.
 
-This has happened once already. `unknown-availability.json` demonstrated `backorder`; the catalogue-completeness round added `backorder` to `inventory.availability`'s `knownValues`, and the fixture moved to `made_to_order` in the same commit. Whoever declares a value one of these fixtures depends on owns that swap. The same trap is waiting for `unknown-promotion-target.json`, which uses `#collectionTarget`.
+This has happened twice. `unknown-availability.json` demonstrated `backorder` until the catalogue-completeness round declared it, and moved to `made_to_order` in the same commit. `unknown-promotion-target.json` demonstrated `#collectionTarget` until the `collection` record landed, and moved to `#taxonomyTarget`. Whoever declares a value one of these fixtures depends on owns that swap — and it is worth noticing that in both cases the fixture would have gone on passing, silently proving nothing, for as long as nobody looked.
 
 ## Why phase 2 exists
 
@@ -63,6 +63,7 @@ Codes are stable and map 1:1 to the numbered list in the README. `scripts/checks
 | INV10 | Extracted and derived fields must not reappear on a record |
 | INV11 | `structure: "grouped"` iff `groupedItems` is present, and a grouped listing must not list itself |
 | INV12 | `productGroup.defaultVariant` must be a listing whose `partOf` is that group |
+| INV13 | A license must carry `content`, `url`, or `identifier` |
 
 INV10 is the guard against regression to the pre-boundary shape. It matters because the reference validator *ignores* unknown properties: writing `availability` back onto a listing is silently valid Lexicon, and only a check like this notices that stock state has crept back out of the inventory record. Its field map takes dotted paths, so a withdrawn field nested inside a union member — `details.fileFormat`, replaced by `fileFormats` — is caught as well as a top-level one.
 

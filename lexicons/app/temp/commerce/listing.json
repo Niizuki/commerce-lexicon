@@ -147,6 +147,11 @@
             "maxLength": 100,
             "description": "The listings this one bundles together. Present exactly when structure is 'grouped'. The grouped listing publishes its own price: per-item discount overrides are deliberately absent, because two applications totalling prices held in other records can disagree and both be right."
           },
+          "license": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the app.temp.commerce.license record granting the usage rights sold with this listing. A reference rather than inline terms, because one license normally covers a whole catalogue and an earlier purchase must still resolve the version it was made under. Inherited from the productGroup when absent and partOf is set."
+          },
           "location": {
             "type": "ref",
             "ref": "app.temp.commerce.defs#location",

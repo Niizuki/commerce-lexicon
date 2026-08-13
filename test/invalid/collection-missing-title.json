@@ -1,0 +1,4 @@
+{ "$type": "app.temp.commerce.collection",
+  "shopRef": "at://did:plc:seller/app.temp.commerce.shop/self",
+  "items": [ "at://did:plc:seller/app.temp.commerce.listing/3kmug" ],
+  "createdAt": "2026-06-20T12:00:00Z" }
