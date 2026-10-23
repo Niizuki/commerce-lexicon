@@ -81,6 +81,8 @@ npm run validate
 
 Fixtures are addressed by `test/fixtures/manifest.json` and converted with `jsonToLex` before validation, exactly as records arriving over the wire are. See [docs/validation.md](docs/validation.md) for the design and for how to extend the corpus.
 
+Run `npm run validate` locally before merging: automatic CI is disabled by owner decision (2026-10-23). The validate workflow runs only on manual `workflow_dispatch`, and the local run is the merge evidence.
+
 ## Documentation
 
 - [docs/boundaries.md](docs/boundaries.md) — why each boundary exists, what was deliberately deferred, and the full reasoning behind the variant inheritance decision.

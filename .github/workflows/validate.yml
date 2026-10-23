@@ -1,9 +1,9 @@
 name: validate
 
+# Manual only: automatic push, pull-request and scheduled runs are disabled by owner decision (2026-10-23).
+# The local gate is the merge evidence; dispatch this workflow deliberately when a hosted run is wanted.
 on:
-  push:
-    branches: ['**']
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   validate:
